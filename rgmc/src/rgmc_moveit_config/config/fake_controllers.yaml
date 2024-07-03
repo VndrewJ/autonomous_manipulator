@@ -1,0 +1,24 @@
+controller_list:
+  - name: fake_ur5e_A_arm_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - ur5e_A/shoulder_pan_joint
+      - ur5e_A/shoulder_lift_joint
+      - ur5e_A/elbow_joint
+      - ur5e_A/wrist_1_joint
+      - ur5e_A/wrist_2_joint
+      - ur5e_A/wrist_3_joint
+  - name: fake_ur5e_B_arm_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - ur5e_B/shoulder_pan_joint
+      - ur5e_B/shoulder_lift_joint
+      - ur5e_B/elbow_joint
+      - ur5e_B/wrist_1_joint
+      - ur5e_B/wrist_2_joint
+      - ur5e_B/wrist_3_joint
+initial:  # Define initial robot poses per group
+#  - group: ur5e_A_arm
+#    pose: home
+
+  []

@@ -1,0 +1,45 @@
+controller_list:
+  - name: ur5e_A/scaled_pos_joint_traj_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - ur5e_A/shoulder_pan_joint
+      - ur5e_A/shoulder_lift_joint
+      - ur5e_A/elbow_joint
+      - ur5e_A/wrist_1_joint
+      - ur5e_A/wrist_2_joint
+      - ur5e_A/wrist_3_joint
+  - name: ur5e_A/pos_joint_traj_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - ur5e_A/shoulder_pan_joint
+      - ur5e_A/shoulder_lift_joint
+      - ur5e_A/elbow_joint
+      - ur5e_A/wrist_1_joint
+      - ur5e_A/wrist_2_joint
+      - ur5e_A/wrist_3_joint
+  - name: ur5e_B/scaled_pos_joint_traj_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - ur5e_B/shoulder_pan_joint
+      - ur5e_B/shoulder_lift_joint
+      - ur5e_B/elbow_joint
+      - ur5e_B/wrist_1_joint
+      - ur5e_B/wrist_2_joint
+      - ur5e_B/wrist_3_joint
+  - name: ur5e_B/pos_joint_traj_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - ur5e_B/shoulder_pan_joint
+      - ur5e_B/shoulder_lift_joint
+      - ur5e_B/elbow_joint
+      - ur5e_B/wrist_1_joint
+      - ur5e_B/wrist_2_joint
+      - ur5e_B/wrist_3_joint

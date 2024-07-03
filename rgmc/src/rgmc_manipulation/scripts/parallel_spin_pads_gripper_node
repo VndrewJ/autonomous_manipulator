@@ -1,0 +1,534 @@
+#! /usr/bin/env python
+
+import time
+import numpy as np
+import rospy
+import actionlib
+from sensor_msgs.msg import JointState
+from ndx_manipulation.Parallel_XM430 import Parallel_XM430
+from ndx_manipulation.msg import (
+    GripperCommandAction,
+    GripperCommandFeedback,
+    GripperCommandResult,
+    RotaryGripperCommandAction,
+    RotaryGripperCommandFeedback,
+    RotaryGripperCommandResult,
+)
+from threading import Lock
+from rgmc_manipulation.RotaryPads import RotaryPads
+import dynamixel_sdk as dx
+from rgmc_manipulation.msg import (
+    ParallelSpinPadsGripperCommandAction,
+    ParallelSpinPadsGripperCommandGoal,
+    ParallelSpinPadsGripperCommandFeedback,
+    ParallelSpinPadsGripperCommandResult,
+)
+from tf2_ros import Buffer, TransformListener, StaticTransformBroadcaster
+from geometry_msgs.msg import TransformStamped
+from tf.transformations import quaternion_from_euler
+from ndx_util.tf_util import get_pose
+
+
+def rotated_fingertip_setup(
+    pad_center_tf_name, fingertip_name, rotated_fingertip_name
+):
+    br = StaticTransformBroadcaster()
+
+    buffer = Buffer()
+    ts_list = TransformListener(buffer)
+
+    # pad_center_tf_name = "ur5e_A_pad_center"
+    # fingertip_name = "ur5e_A_fingertip"
+    # rotated_fingertip_name = "ur5e_A_rotated_fingertip"
+
+    rospy.sleep(1)  # Waiting for buffer to fill
+
+    # Getting pose of fingertip relative to pad center:
+    _, p_fing, q_fing, _ = get_pose(
+        buffer, pad_center_tf_name, fingertip_name, rospy.Time.now(), 5
+    )
+
+    # Publishing auxiliary tf to serve as anchor for the rotation:
+    ts = TransformStamped()
+    ts.header.stamp = rospy.Time.now()
+    ts.child_frame_id = pad_center_tf_name + "_joint"
+    ts.header.frame_id = pad_center_tf_name
+    ts.transform.rotation.w = 1
+
+    br.sendTransform(ts)
+
+    # Publishing rotational fingertip tf
+    ts = TransformStamped()
+    ts.header.stamp = rospy.Time.now()
+    ts.child_frame_id = rotated_fingertip_name
+    ts.header.frame_id = pad_center_tf_name + "_joint"
+    ts.transform.translation.x = p_fing[0]
+    ts.transform.translation.y = p_fing[1]
+    ts.transform.translation.z = p_fing[2]
+
+    ts.transform.rotation.x = q_fing[0]
+    ts.transform.rotation.y = q_fing[1]
+    ts.transform.rotation.z = q_fing[2]
+    ts.transform.rotation.w = q_fing[3]
+
+    br.sendTransform(ts)
+
+
+class ParallelSpinPadsActionServer:
+    # create messages that are used to publish feedback/result
+    _feedback = ParallelSpinPadsGripperCommandFeedback()
+    _result = ParallelSpinPadsGripperCommandResult()
+
+    # Mutex for motor IO. We have to declare the mutex externally, or else when
+    # creating a thread python will just copy every object variable. Doing this
+    # way we ensure python will always reference the same var.
+    mutex = Lock()
+
+    def __init__(self, name):
+        # Parameters
+        self.port = rospy.get_param("~port", "/dev/ttyUSB0")
+        self.joint_state_rate_hz = rospy.get_param("~joint_state_rate_hz")
+        self.feedback_rate = rospy.get_param("~feedback_rate")
+
+        self.parallel_motor_default_velocity = rospy.get_param(
+            "~parallel_motor_default_velocity"
+        )
+        self.parallel_default_max_effort = rospy.get_param(
+            "~parallel_default_max_effort"
+        )
+        self.parallel_grip_joint_names = rospy.get_param(
+            "~parallel_grip_joint_names"
+        )
+        self.parallel_grip_max_aperture = rospy.get_param("~max_aperture")
+        self.parallel_motor_id = rospy.get_param("~parallel_motor_id", 1)
+        self.p_jaw_calibration_file = rospy.get_param("~cal_file_path")
+
+        self.pads_default_velocity = rospy.get_param("~pads_default_velocity")
+        self.pads_default_effort = rospy.get_param("~default_rot_pads_effort")
+        self.pads_motor_ids = rospy.get_param("~rot_motor_id", [2, 3])
+        self.rot_pads_joint_names = rospy.get_param("~rot_pads_joint_names")
+
+        output_js_topic = rospy.get_param("~output_js_topic", "joint_states")
+        pads_center_offset_from_fingertip = rospy.get_param(
+            "~pads_center_offset_from_fingertip"
+        )
+        gripper_fingertip_name = rospy.get_param("~gripper_fingertip_name")
+        self.pads_center_transform_name = rospy.get_param(
+            "~pads_center_transform_name"
+        )
+        pads_rotated_fingertip_name = rospy.get_param(
+            "~pads_rotated_fingertip_name"
+        )
+        rotated_fingertip_setup(
+            self.pads_center_transform_name,
+            gripper_fingertip_name,
+            pads_rotated_fingertip_name,
+        )
+        self.br = StaticTransformBroadcaster()
+
+        # Opening USB port. It is assumed that all 3 servos are daisy-chained,
+        # so they all use the same usb port
+        self.port_handler = dx.PortHandler(self.port)
+
+        # Creating parallel gripper object
+        self.p_gripper = Parallel_XM430(
+            port=None,
+            motor_id=self.parallel_motor_id,
+            default_velocity=self.parallel_motor_default_velocity,
+            default_grasp_current=self.parallel_default_max_effort,
+            port_handler=self.port_handler,
+            finger_max_aperture=self.parallel_grip_max_aperture,
+        )
+
+        # Creating rotating pads object
+        self.rot_pads = RotaryPads(
+            port=None,
+            ids=self.pads_motor_ids,
+            default_velocity=self.pads_default_velocity,
+            default_effort=self.pads_default_effort,
+            port_handler=self.port_handler,
+        )
+
+        # Starting parallel jaw calibration
+        # self.hand.shutdown()
+        self.p_gripper.calibrate(
+            cal_file_path=self.p_jaw_calibration_file, recalibrate=False
+        )
+
+        # Parallel gripper variables
+        self.parallel_motor_pos = self.p_gripper.get_positions()
+        self.parallel_motor_cur = self.p_gripper.get_currents()
+        self.parallel_motor_aperture = (
+            self.p_gripper.motor.max_pos - self.p_gripper.motor.min_pos
+        )
+
+        # Rotary pads variables
+
+        self.pads_motor_pos = self.rot_pads.get_positions()
+        self.pads_motor_cur = self.rot_pads.get_currents()
+
+        # Initialise joint state publisher
+        self._js_pub = rospy.Publisher(
+            output_js_topic, JointState, queue_size=1
+        )
+
+        # Start action server
+        self._action_name = name
+        self._as = actionlib.SimpleActionServer(
+            self._action_name,
+            ParallelSpinPadsGripperCommandAction,
+            execute_cb=self.execute_callback,
+            auto_start=False,
+        )
+        self._as.start()
+
+    def execute_callback(self, goal: ParallelSpinPadsGripperCommandGoal):
+        # Variables
+        rate = rospy.Rate(self.feedback_rate)
+        par_reached_goal = True
+        par_stalled = False
+        pads_reached_goal = True
+        pads_stalled = False
+
+        if goal.actuate_parallel:
+            par_reached_goal = False
+            # Bound requested aperture
+            desired_aperture = goal.par_target_pos
+            if desired_aperture > self.parallel_grip_max_aperture:
+                desired_aperture = self.parallel_grip_max_aperture
+            if desired_aperture < 0:
+                desired_aperture = 0
+
+            # Extract goal
+            goal_pos = self.p_gripper.motor.max_pos - int(
+                self.parallel_motor_aperture
+                * (desired_aperture / self.parallel_grip_max_aperture)
+            )
+            p_max_effort = int(goal.par_max_effort)
+            p_velocity = int(goal.par_velocity)
+
+            # Flip effort if opening
+            if goal_pos < self.parallel_motor_pos:
+                p_max_effort = -p_max_effort
+
+            # Handle missing input
+            if p_max_effort == 0:
+                p_max_effort = self.parallel_default_max_effort
+            if p_velocity == 0:
+                p_velocity = self.parallel_motor_default_velocity
+
+            # Print inputs
+            rospy.loginfo(
+                "{}: Executing, setting gripper to position {} with max effort"
+                " {} and velocity {}".format(
+                    self._action_name, goal_pos, p_max_effort, p_velocity
+                )
+            )
+
+            # Set motor velocity, position and effort
+            ParallelSpinPadsActionServer.mutex.acquire(blocking=True)
+            self.p_gripper.set_goal_position(
+                pos_lst=[goal_pos],
+                speed_lst=[p_velocity],
+                curr_lst=[p_max_effort],
+            )
+            ParallelSpinPadsActionServer.mutex.release()
+
+            # Loop until at goal or preempted
+            pos = self.parallel_motor_pos
+            cur = self.parallel_motor_cur
+            while np.sign(p_max_effort) * (p_max_effort - cur) > 0:
+                rate.sleep()
+
+                # Exit if motor stalled and current not reaching limit
+                if pos == self.parallel_motor_pos:
+                    time.sleep(0.5)
+                    if pos == self.parallel_motor_pos:
+                        break
+
+                # Get motor position and current
+                pos = self.parallel_motor_pos
+                cur = self.parallel_motor_cur
+
+                # If at position goal, break loop
+                if abs((goal_pos - pos)) < 15:
+                    par_reached_goal = True
+                    par_stalled = False
+                    break
+
+                # Check that preempt has not been requested by the client
+                if self._as.is_preempt_requested():
+                    rospy.loginfo("{}: Preempted".format(self._action_name))
+                    self._as.set_preempted()
+                    pads_reached_goal = False
+                    break
+
+                # Publish feedback
+                self._feedback.par_position = self.finger_pos * 2.0
+                self._feedback.par_effort = self.pads_motor_cur
+                # self._as.publish_feedback(self._feedback)
+        if goal.actuate_pads:
+            pads_reached_goal = False
+            goal_pos = goal.pads_target_pos
+            effort = int(goal.pads_max_effort)
+            pads_velocity = int(goal.pads_velocity)
+
+            # Validating inputs
+            if effort == 0:
+                effort = self.pads_default_effort
+            effort = abs(effort)
+
+            if pads_velocity == 0:
+                velocity = self.pads_default_velocity
+            else:
+                velocity = pads_velocity
+
+            # Print inputs
+            rospy.loginfo(
+                "{}: Executing, rotating pads to position {} with max effort"
+                " {} and velocity {}".format(
+                    self._action_name, goal_pos, effort, velocity
+                )
+            )
+
+            # Converting angles to pulses (2pi = 360 degrees = 4096 pulses)
+            pulses = int((4096 / (2 * np.pi)) * goal_pos)
+
+            # Start rotating with desired current
+            ParallelSpinPadsActionServer.mutex.acquire(blocking=True)
+            self.rot_pads.motors[0].set_goal_current(effort)
+            self.rot_pads.motors[1].set_goal_current(effort)
+            ParallelSpinPadsActionServer.mutex.release()
+
+            # Rotate until desired offset
+            if goal.reverse_pads_actuation:
+                factor = -1
+            else:
+                factor = 1
+            target_pulse_position = [
+                pulses + self.rot_pads.motor_offset_list[0],
+                factor * pulses + self.rot_pads.motor_offset_list[1],
+            ]
+
+            ParallelSpinPadsActionServer.mutex.acquire(blocking=True)
+            pos = self.rot_pads.get_positions()
+            self.rot_pads.set_goal_position(
+                target_pulse_position,
+                speed_lst=[velocity, velocity],
+                curr_lst=[effort, effort],
+                safe=False,
+            )
+            ParallelSpinPadsActionServer.mutex.release()
+
+            all_reached_goal = False
+            while not all_reached_goal:
+                all_reached_goal = self.rot_pads.is_at_goal_position(
+                    goal_position_lst=target_pulse_position,
+                    current_position_lst=self.pads_motor_pos,
+                    tolerance=30,
+                )
+                if self._as.is_preempt_requested():
+                    rospy.loginfo("{}: Preempted".format(self._action_name))
+                    self._as.set_preempted()
+                    success = False
+                    break
+                # Publish feedback
+                self._feedback.pads_position = self.pad_angles
+
+                ts = TransformStamped()
+                ts.header.stamp = rospy.Time.now()
+                ts.child_frame_id = self.pads_center_transform_name + "_joint"
+                ts.header.frame_id = self.pads_center_transform_name
+
+                q = quaternion_from_euler(0, self.pad_angles[0], 0)
+                # q = quaternion_from_euler(0, np.deg2rad(self.pad_angles[0]), 0)
+                ts.transform.rotation.x = q[0]
+                ts.transform.rotation.y = q[1]
+                ts.transform.rotation.z = q[2]
+                ts.transform.rotation.w = q[3]
+                self.br.sendTransform(ts)
+                # self._feedback.pads_effort = self.pads_motor_cur
+                self._feedback.pads_effort = [0, 0]
+                # self._as.publish_feedback(self._feedback)
+                # print(
+                #     f"Target: {target_pulse_position}, Current:"
+                #     f" {self.pads_motor_pos}"
+                # )
+            pads_reached_goal = True
+
+        if pads_reached_goal and par_reached_goal:
+            # Set goal positions as they are
+            # ParallelSpinPadsActionServer.mutex.acquire(blocking=True)
+            # self.p_gripper.set_goal_position(pos)
+            # ParallelSpinPadsActionServer.mutex.release()
+
+            # Return result
+            self._result.par_final_position = self.finger_pos * 2.0
+            self._result.par_final_effort = self.parallel_motor_cur
+            self._result.par_reached_goal = par_reached_goal
+            self._result.par_stalled = par_stalled
+
+            self._result.pads_final_position = self.pad_angles
+            self._result.pads_final_effort = self.pads_motor_pos
+            self._result.pads_stalled = pads_stalled
+            self._result.pads_reached_goal = pads_reached_goal
+            rospy.loginfo("{}: Succeeded".format(self._action_name))
+            self._as.set_succeeded(self._result)
+
+    def run(self):
+        # Set rate
+        rate = rospy.Rate(self.joint_state_rate_hz)
+
+        # Loop and publish gripper state
+        while not rospy.is_shutdown():
+            # Get motor position and current
+            ParallelSpinPadsActionServer.mutex.acquire()
+
+            self.finger_pos = self.p_gripper.get_finger_position()
+            self.parallel_motor_pos = self.p_gripper.get_positions()[0]
+            self.parallel_motor_cur = self.p_gripper.get_currents()[0]
+
+            self.pad_angles = self.rot_pads.get_pad_angles()
+            self.pads_motor_pos = self.rot_pads.get_positions()
+            self.pads_motor_cur = self.rot_pads.get_currents()
+
+            ParallelSpinPadsActionServer.mutex.release()
+
+            # Construct message
+            msg = JointState()
+            msg.header.stamp = rospy.Time.now()
+            msg.name = (
+                self.parallel_grip_joint_names + self.rot_pads_joint_names
+            )
+
+            msg.position = [
+                self.finger_pos,
+                self.finger_pos,
+                self.pad_angles[0],
+                self.pad_angles[1],
+            ]
+            msg.effort = [
+                self.parallel_motor_cur,
+                self.parallel_motor_cur,
+                self.pads_motor_cur[0],
+                self.pads_motor_cur[1],
+            ]
+
+            # Publish message
+            self._js_pub.publish(msg)
+
+            rate.sleep()
+
+        # Shut down gripper before exiting
+        self.rot_pads.shutdown()
+        self.p_gripper.shutdown()
+
+
+if __name__ == "__main__":
+    # Initialise node
+    rospy.init_node("gripper_par")
+    act_s = ParallelSpinPadsActionServer(rospy.get_name())
+    act_s.run()
+
+    # rot_pads = RotaryPads(
+    #     port="/dev/ttyUSB0",
+    #     ids=[2, 3],
+    #     operating_mode=5,
+    #     default_velocity=250,
+    #     default_effort=400,
+    # )
+    # print(np.rad2deg(rot_pads.get_pad_angles()))
+    # rot_pads.rotate(
+    #     position=np.deg2rad(45), velocity=50, current=500, tolerance=50
+    # )
+    # rospy.sleep(1.0)
+    # print(np.rad2deg(rot_pads.get_pad_angles()))
+    # rot_pads.rotate(
+    #     position=np.deg2rad(-45), velocity=50, current=500, tolerance=50
+    # )
+    # rospy.sleep(1.0)
+    # print(np.rad2deg(rot_pads.get_pad_angles()))
+    # rot_pads.rotate(
+    #     position=np.deg2rad(0), velocity=50, current=500, tolerance=50
+    # )
+    # rospy.sleep(1.0)
+    # print(np.rad2deg(rot_pads.get_pad_angles()))
+    # rot_pads.shutdown()
+
+    # parallel = Parallel_XM430(
+    #     port="/dev/ttyUSB0",
+    #     motor_id=1,
+    #     default_velocity=50,
+    #     default_grasp_current=100,
+    #     finger_max_aperture=0.105,
+    # )
+    # parallel.calibrate(
+    #     cal_file_path="/home/felipe/parallel_cal.csv", recalibrate=False
+    # )
+    # print(parallel.get_finger_position())
+    # parallel.move_finger_to_position(0, 50, 100)
+    # print(parallel.get_finger_position())
+    # parallel.move_finger_to_position(0.1, 50, 100)
+    # print(parallel.get_finger_position())
+    # parallel.move_finger_to_position(0, 50, 100)
+    # print(parallel.get_finger_position())
+
+    # Rotated fingertip test:
+    # br = StaticTransformBroadcaster()
+    # buffer = Buffer()
+    # ts_list = TransformListener(buffer)
+
+    # pad_center_tf_name = "ur5e_A_pad_center"
+    # fingertip_name = "ur5e_A_fingertip"
+    # rotated_fingertip_name = "ur5e_A_rotated_fingertip"
+
+    # rospy.sleep(1)  # Waiting for buffer to fill
+
+    # # Getting pose of fingertip relative to pad center:
+    # _, p_fing, q_fing, _ = get_pose(
+    #     buffer, pad_center_tf_name, fingertip_name, rospy.Time.now(), 5
+    # )
+
+    # # Publishing auxiliary tf to serve as anchor for the rotation:
+    # ts = TransformStamped()
+    # ts.header.stamp = rospy.Time.now()
+    # ts.child_frame_id = pad_center_tf_name + "_joint"
+    # ts.header.frame_id = pad_center_tf_name
+    # ts.transform.rotation.w = 1
+
+    # br.sendTransform(ts)
+
+    # # Publishing rotational fingertip tf
+    # ts = TransformStamped()
+    # ts.header.stamp = rospy.Time.now()
+    # ts.child_frame_id = rotated_fingertip_name
+    # ts.header.frame_id = pad_center_tf_name + "_joint"
+    # ts.transform.translation.x = p_fing[0]
+    # ts.transform.translation.y = p_fing[1]
+    # ts.transform.translation.z = p_fing[2]
+
+    # ts.transform.rotation.x = q_fing[0]
+    # ts.transform.rotation.y = q_fing[1]
+    # ts.transform.rotation.z = q_fing[2]
+    # ts.transform.rotation.w = q_fing[3]
+
+    # br.sendTransform(ts)
+
+    # rate = rospy.Rate(10)
+    # _, p, _, _ = get_pose(
+    #     buffer, ts.header.frame_id, "ur5e_A_fingertip", rospy.Time.now(), 5
+    # )
+    # for a in np.arange(90, -90, -1):
+    #     q = quaternion_from_euler(0, np.deg2rad(a), 0)
+
+    #     ts = TransformStamped()
+    #     ts.header.stamp = rospy.Time.now()
+    #     ts.child_frame_id = pad_center_tf_name + "_joint"
+    #     ts.header.frame_id = pad_center_tf_name
+
+    #     ts.transform.rotation.x = q[0]
+    #     ts.transform.rotation.y = q[1]
+    #     ts.transform.rotation.z = q[2]
+    #     ts.transform.rotation.w = q[3]
+    #     br.sendTransform(ts)
+    #     rate.sleep()

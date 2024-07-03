@@ -1,0 +1,1021 @@
+#! /usr/bin/env python
+
+import rospy
+import yaml
+import sys
+
+import numpy as np
+
+# from ndx_util import get
+from tf.transformations import euler_matrix, quaternion_from_matrix
+from tf2_ros import TransformBroadcaster, Buffer, TransformListener
+from geometry_msgs.msg import PoseStamped
+from ndx_util.NdxArm import NdxArm
+from ndx_util.tf_util import get_pose, tarray_to_tmsg, tarray_to_posemsg
+
+from rgmc_manipulation.msg import (
+    ParallelSpinPadsGripperCommandAction,
+    ParallelSpinPadsGripperCommandActionGoal,
+    ParallelSpinPadsGripperCommandGoal,
+)
+from actionlib import SimpleActionClient
+from controller_manager_msgs.srv import SwitchController
+from rgmc_task_execution.common import (
+    pick,
+    place,
+    disable_compliance,
+    actuate_rotary_gripper,
+    spiral_down,
+    enable_compliance,
+    add_table,
+)
+
+from rgmc_manipulation.srv import NFSRequest
+import dynamic_reconfigure.client
+
+
+def disassemble_ethernet(
+    arm, gripper, switch_controllers, compliance_target_pub
+):
+    # Transform to make gripper Z and Y align with object's X and Y
+    H_gripp_align = np.eye(4)
+    # Gripper Z is object's Y
+    H_gripp_align[:3, 2] = np.array([0, 1, 0])
+    # Gripper Y is object's -X
+    H_gripp_align[:3, 1] = np.array([-1, 0, 0])
+    # Gripper X is object's cross Y and Z
+    H_gripp_align[:3, 0] = np.cross(H_gripp_align[:3, 1], H_gripp_align[:3, 2])
+
+    if not pick(
+        object_tf_name="ethernet_connector_head",
+        pre_pick_offset=np.array([0, 0, 0.1]),
+        pick_offset=np.array([0.0, 0, 0.036]),
+        post_pick_offset=np.array([0, 0, 0.1]),
+        post_pick_pad_angle=0.0,
+        arm=arm,
+        gripper=gripper,
+        picking_apperture=0.04,
+        picking_close_dist=0.008,
+        picking_current=100,
+        H_gripp_align=H_gripp_align,
+        func_switch_ctrl=switch_controllers,
+    ):
+        rospy.logerr("Could not perform pick operation, aborting")
+        return False
+    if not place(
+        object_tf_name="dropoutbox",
+        pre_place_offset=np.array([0, 0, 0.2]),
+        pre_compliance_offset=None,
+        pre_place_pad_angle=0.0,
+        post_place_offset=np.array([0, 0, 0.2]),
+        compliance_depth=0,
+        parallel_open_aperture=0.04,
+        arm=arm,
+        gripper=gripper,
+        func_switch_ctrl=switch_controllers,
+        compliance_target_pub=compliance_target_pub,
+    ):
+        rospy.logerr("Could not perform place operation, aborting")
+        return False
+
+
+def disassemble_big_square_peg(
+    arm, gripper, switch_controllers, compliance_target_pub
+):
+    # # Transform to make gripper Z and Y align with object's X and Y
+    # H_gripp_align = np.eye(4)
+    # # Gripper Z is object's Y
+    # H_gripp_align[:3, 2] = np.array([0, 1, 0])
+    # # Gripper Y is object's -X
+    # H_gripp_align[:3, 1] = np.array([-1, 0, 0])
+    # # Gripper X is object's cross Y and Z
+    # H_gripp_align[:3, 0] = np.cross(H_gripp_align[:3, 1], H_gripp_align[:3, 2])
+
+    if not pick(
+        object_tf_name="big_square_peg_hole",
+        pre_pick_offset=np.array([0, 0, 0.1]),
+        pick_offset=np.array([0.0, 0, 0.006]),
+        post_pick_offset=np.array([0, 0, 0.1]),
+        post_pick_pad_angle=0.0,
+        arm=arm,
+        gripper=gripper,
+        picking_apperture=0.04,
+        picking_close_dist=0.012,
+        picking_current=100,
+        # H_gripp_align=H_gripp_align,
+        func_switch_ctrl=switch_controllers,
+    ):
+        rospy.logerr("Could not perform pick operation, aborting")
+        return False
+    if not place(
+        object_tf_name="dropoutbox",
+        pre_place_offset=np.array([0, 0, 0.2]),
+        pre_compliance_offset=None,
+        pre_place_pad_angle=0.0,
+        post_place_offset=np.array([0, 0, 0.2]),
+        compliance_depth=0,
+        parallel_open_aperture=0.04,
+        arm=arm,
+        gripper=gripper,
+        func_switch_ctrl=switch_controllers,
+        compliance_target_pub=compliance_target_pub,
+    ):
+        rospy.logerr("Could not perform place operation, aborting")
+        return False
+
+
+def disassemble_small_square_peg(
+    arm, gripper, switch_controllers, compliance_target_pub
+):
+    # Transform to make gripper Z and Y align with object's X and Y
+    H_gripp_align = np.eye(4)
+    # Gripper Z is object's Y
+    H_gripp_align[:3, 2] = np.array([0, 1, 0])
+    # Gripper Y is object's -X
+    H_gripp_align[:3, 1] = np.array([-1, 0, 0])
+    # Gripper X is object's cross Y and Z
+    H_gripp_align[:3, 0] = np.cross(H_gripp_align[:3, 1], H_gripp_align[:3, 2])
+
+    if not pick(
+        object_tf_name="small_square_peg_hole",
+        pre_pick_offset=np.array([0, 0, 0.1]),
+        pick_offset=np.array([0.0, 0, 0.008]),
+        post_pick_offset=np.array([0, 0, 0.1]),
+        post_pick_pad_angle=0.0,
+        arm=arm,
+        gripper=gripper,
+        picking_apperture=0.04,
+        picking_close_dist=0.012,
+        picking_current=100,
+        H_gripp_align=H_gripp_align,
+        func_switch_ctrl=switch_controllers,
+    ):
+        rospy.logerr("Could not perform pick operation, aborting")
+        return False
+    if not place(
+        object_tf_name="dropoutbox",
+        pre_place_offset=np.array([0, 0, 0.2]),
+        pre_compliance_offset=None,
+        pre_place_pad_angle=0.0,
+        post_place_offset=np.array([0, 0, 0.2]),
+        compliance_depth=0,
+        parallel_open_aperture=0.04,
+        arm=arm,
+        gripper=gripper,
+        func_switch_ctrl=switch_controllers,
+        compliance_target_pub=compliance_target_pub,
+    ):
+        rospy.logerr("Could not perform place operation, aborting")
+        return False
+
+
+def disassemble_big_round_peg(
+    arm, gripper, switch_controllers, compliance_target_pub
+):
+    # # Transform to make gripper Z and Y align with object's X and Y
+    # H_gripp_align = np.eye(4)
+    # # Gripper Z is object's Y
+    # H_gripp_align[:3, 2] = np.array([0, 1, 0])
+    # # Gripper Y is object's -X
+    # H_gripp_align[:3, 1] = np.array([-1, 0, 0])
+    # # Gripper X is object's cross Y and Z
+    # H_gripp_align[:3, 0] = np.cross(H_gripp_align[:3, 1], H_gripp_align[:3, 2])
+
+    if not pick(
+        object_tf_name="big_round_peg_hole",
+        pre_pick_offset=np.array([0, 0, 0.1]),
+        pick_offset=np.array([0.0, 0, 0.006]),
+        post_pick_offset=np.array([0, 0, 0.1]),
+        post_pick_pad_angle=0.0,
+        arm=arm,
+        gripper=gripper,
+        picking_apperture=0.04,
+        picking_close_dist=0.012,
+        picking_current=100,
+        # H_gripp_align=H_gripp_align,
+        func_switch_ctrl=switch_controllers,
+    ):
+        rospy.logerr("Could not perform pick operation, aborting")
+        return False
+    if not place(
+        object_tf_name="dropoutbox",
+        pre_place_offset=np.array([0, 0, 0.2]),
+        pre_compliance_offset=None,
+        pre_place_pad_angle=0.0,
+        post_place_offset=np.array([0, 0, 0.2]),
+        compliance_depth=0,
+        parallel_open_aperture=0.04,
+        arm=arm,
+        gripper=gripper,
+        func_switch_ctrl=switch_controllers,
+        compliance_target_pub=compliance_target_pub,
+    ):
+        rospy.logerr("Could not perform place operation, aborting")
+        return False
+
+
+def disassemble_small_round_peg(
+    arm, gripper, switch_controllers, compliance_target_pub
+):
+    # # Transform to make gripper Z and Y align with object's X and Y
+    # H_gripp_align = np.eye(4)
+    # # Gripper Z is object's Y
+    # H_gripp_align[:3, 2] = np.array([0, 1, 0])
+    # # Gripper Y is object's -X
+    # H_gripp_align[:3, 1] = np.array([-1, 0, 0])
+    # # Gripper X is object's cross Y and Z
+    # H_gripp_align[:3, 0] = np.cross(H_gripp_align[:3, 1], H_gripp_align[:3, 2])
+
+    if not pick(
+        object_tf_name="small_round_peg_hole",
+        pre_pick_offset=np.array([0, 0, 0.1]),
+        pick_offset=np.array([0.0, 0, 0.005]),
+        post_pick_offset=np.array([0, 0, 0.1]),
+        post_pick_pad_angle=0.0,
+        arm=arm,
+        gripper=gripper,
+        picking_apperture=0.04,
+        picking_close_dist=0.012,
+        picking_current=100,
+        # H_gripp_align=H_gripp_align,
+        func_switch_ctrl=switch_controllers,
+    ):
+        rospy.logerr("Could not perform pick operation, aborting")
+        return False
+    if not place(
+        object_tf_name="dropoutbox",
+        pre_place_offset=np.array([0, 0, 0.2]),
+        pre_compliance_offset=None,
+        pre_place_pad_angle=0.0,
+        post_place_offset=np.array([0, 0, 0.2]),
+        compliance_depth=0,
+        parallel_open_aperture=0.04,
+        arm=arm,
+        gripper=gripper,
+        func_switch_ctrl=switch_controllers,
+        compliance_target_pub=compliance_target_pub,
+    ):
+        rospy.logerr("Could not perform place operation, aborting")
+        return False
+
+
+def disassemble_cable_connectors(
+    arm, gripper, switch_controllers, compliance_target_pub
+):
+    # Transform to make gripper Z and Y align with object's X and Y
+    H_gripp_align = np.eye(4)
+    # Gripper Z is object's Y
+    H_gripp_align[:3, 2] = np.array([0, 1, 0])
+    # Gripper Y is object's -X
+    H_gripp_align[:3, 1] = np.array([-1, 0, 0])
+    # Gripper X is object's cross Y and Z
+    H_gripp_align[:3, 0] = np.cross(H_gripp_align[:3, 1], H_gripp_align[:3, 2])
+
+    if not pick(
+        object_tf_name="cable_connector_01_hole",
+        pre_pick_offset=np.array([0, 0, 0.07]),
+        pick_offset=np.array([0.0, 0, 0.023]),
+        post_pick_offset=np.array([0, 0, 0.055]),
+        post_pick_pad_angle=0.0,
+        arm=arm,
+        gripper=gripper,
+        picking_apperture=0.04,
+        picking_close_dist=0.0,
+        picking_current=200,
+        H_gripp_align=H_gripp_align,
+        func_switch_ctrl=switch_controllers,
+    ):
+        rospy.logerr("Could not perform pick operation, aborting")
+        return False
+    gripper.send_goal_and_wait(
+        ParallelSpinPadsGripperCommandGoal(
+            par_target_pos=0.05,
+            par_max_effort=100,
+            par_velocity=50,
+            actuate_parallel=True,
+            actuate_pads=False,
+        )
+    )
+    if not pick(
+        object_tf_name="cable_connector_02_hole",
+        pre_pick_offset=np.array([0, 0, 0.055]),
+        pick_offset=np.array([0.0, 0, 0.023]),
+        post_pick_offset=np.array([0, 0, 0.055]),
+        post_pick_pad_angle=0.0,
+        arm=arm,
+        gripper=gripper,
+        picking_apperture=0.04,
+        picking_close_dist=0.0,
+        picking_current=200,
+        H_gripp_align=H_gripp_align,
+        func_switch_ctrl=switch_controllers,
+    ):
+        rospy.logerr("Could not perform pick operation, aborting")
+        return False
+    gripper.send_goal_and_wait(
+        ParallelSpinPadsGripperCommandGoal(
+            par_target_pos=0.05,
+            par_max_effort=100,
+            par_velocity=50,
+            actuate_parallel=True,
+            actuate_pads=False,
+        )
+    )
+
+    if not pick(
+        object_tf_name="cable_holder",
+        pre_pick_offset=np.array([-0.025, -0.03, 0.07]),
+        pick_offset=np.array([-0.025, -0.03, 0]),
+        post_pick_offset=np.array([-0.025, -0.03, 0.30]),
+        post_pick_pad_angle=0.0,
+        arm=arm,
+        gripper=gripper,
+        picking_apperture=0.08,
+        picking_close_dist=0.0,
+        picking_current=100,
+        H_gripp_align=H_gripp_align,
+        func_switch_ctrl=switch_controllers,
+    ):
+        rospy.logerr("Could not perform pick operation, aborting")
+        return False
+
+    if not place(
+        object_tf_name="dropoutbox",
+        pre_place_offset=np.array([0, 0, 0.3]),
+        pre_compliance_offset=None,
+        pre_place_pad_angle=0.0,
+        post_place_offset=np.array([0, 0, 0.3]),
+        compliance_depth=0,
+        parallel_open_aperture=0.04,
+        arm=arm,
+        gripper=gripper,
+        func_switch_ctrl=switch_controllers,
+        compliance_target_pub=compliance_target_pub,
+    ):
+        rospy.logerr("Could not perform place operation, aborting")
+        return False
+
+    return True
+
+
+def disassemble_small_gear(
+    arm, gripper, switch_controllers, compliance_target_pub
+):
+
+    # # Transform to make gripper Z and Y align with object's X and Y
+    # H_gripp_align = np.eye(4)
+    # # Gripper Z is object's Y
+    # H_gripp_align[:3, 2] = np.array([0, 1, 0])
+    # # Gripper Y is object's -X
+    # H_gripp_align[:3, 1] = np.array([-1, 0, 0])
+    # # Gripper X is object's cross Y and Z
+    # H_gripp_align[:3, 0] = np.cross(H_gripp_align[:3, 1], H_gripp_align[:3, 2])
+
+    if not pick(
+        object_tf_name="small_gear_shaft",
+        pre_pick_offset=np.array([0, 0, 0.1]),
+        pick_offset=np.array([0.0, 0, 0.01]),
+        post_pick_offset=np.array([0, 0, 0.1]),
+        post_pick_pad_angle=0.0,
+        arm=arm,
+        gripper=gripper,
+        picking_apperture=0.04,
+        picking_close_dist=0.012,
+        picking_current=100,
+        # H_gripp_align=H_gripp_align,
+        func_switch_ctrl=switch_controllers,
+    ):
+        rospy.logerr("Could not perform pick operation, aborting")
+        return False
+    if not place(
+        object_tf_name="dropoutbox",
+        pre_place_offset=np.array([0, 0, 0.2]),
+        pre_compliance_offset=None,
+        pre_place_pad_angle=0.0,
+        post_place_offset=np.array([0, 0, 0.2]),
+        compliance_depth=0,
+        parallel_open_aperture=0.04,
+        arm=arm,
+        gripper=gripper,
+        func_switch_ctrl=switch_controllers,
+        compliance_target_pub=compliance_target_pub,
+    ):
+        rospy.logerr("Could not perform place operation, aborting")
+        return False
+
+
+def disassemble_big_gear(
+    arm, gripper, switch_controllers, compliance_target_pub
+):
+
+    # # Transform to make gripper Z and Y align with object's X and Y
+    # H_gripp_align = np.eye(4)
+    # # Gripper Z is object's Y
+    # H_gripp_align[:3, 2] = np.array([0, 1, 0])
+    # # Gripper Y is object's -X
+    # H_gripp_align[:3, 1] = np.array([-1, 0, 0])
+    # # Gripper X is object's cross Y and Z
+    # H_gripp_align[:3, 0] = np.cross(H_gripp_align[:3, 1], H_gripp_align[:3, 2])
+
+    if not pick(
+        object_tf_name="big_gear_shaft",
+        pre_pick_offset=np.array([0, 0, 0.1]),
+        pick_offset=np.array([0.0, 0, 0.005]),
+        post_pick_offset=np.array([0, 0, 0.1]),
+        post_pick_pad_angle=0.0,
+        arm=arm,
+        gripper=gripper,
+        picking_apperture=0.075,
+        picking_close_dist=0.052,
+        picking_current=150,
+        # H_gripp_align=H_gripp_align,
+        func_switch_ctrl=switch_controllers,
+    ):
+        rospy.logerr("Could not perform pick operation, aborting")
+        return False
+    if not place(
+        object_tf_name="dropoutbox",
+        pre_place_offset=np.array([0, 0, 0.2]),
+        pre_compliance_offset=None,
+        pre_place_pad_angle=0.0,
+        post_place_offset=np.array([0, 0, 0.2]),
+        compliance_depth=0,
+        parallel_open_aperture=0.075,
+        arm=arm,
+        gripper=gripper,
+        func_switch_ctrl=switch_controllers,
+        compliance_target_pub=compliance_target_pub,
+    ):
+        rospy.logerr("Could not perform place operation, aborting")
+        return False
+
+
+def disassemble_bnc(arm, gripper, switch_controllers, compliance_target_pub):
+    gripper.send_goal_and_wait(
+        ParallelSpinPadsGripperCommandGoal(
+            pads_target_pos=np.deg2rad(90),
+            pads_max_effort=200,
+            pads_velocity=15,
+            actuate_parallel=False,
+            actuate_pads=True,
+            reverse_pads_actuation=True,
+        )
+    )
+
+    if not pick(
+        object_tf_name="bnc_male",
+        pre_pick_offset=np.array([0, 0, 0.1]),
+        pick_offset=np.array([-0.007, 0, 0.013]),
+        post_pick_offset=np.array([-0.007, 0, 0.016]),
+        post_pick_pad_angle=0.0,
+        arm=arm,
+        gripper=gripper,
+        picking_apperture=0.04,
+        picking_close_dist=0.008,
+        picking_current=100,
+        func_switch_ctrl=switch_controllers,
+        actuate_pads=False,
+    ):
+        rospy.logerr("Could not perform pick operation, aborting")
+        return False
+
+    if not arm.set_planning_frame("bnc_male", max_wait_time=30):
+        rospy.logerr("Could not find objects transform in scene. Aborting...")
+        return False
+    # arm.set_tool_pose(pre_place_pose)
+    tool_pose, _, _, _, = get_pose(
+        tf_buffer=arm.tf_buffer,
+        reference_frame="bnc_male",
+        frame=arm.tool_frame,
+        time=rospy.Time.now(),
+        max_wait_time=30,
+    )
+    tool_pose[2, 3] += -0.001
+    if not arm.set_tool_pose(tool_pose):
+        rospy.logerr("Could not reach pose, aborting")
+        return False
+    gripper.send_goal_and_wait(
+        ParallelSpinPadsGripperCommandGoal(
+            pads_target_pos=0,
+            pads_max_effort=250,
+            pads_velocity=15,
+            actuate_parallel=False,
+            actuate_pads=True,
+            reverse_pads_actuation=True,
+        )
+    )
+    tool_pose[2, 3] += 0.1
+    if not arm.set_tool_pose(tool_pose):
+        rospy.logerr("Could not reach pose, aborting")
+        return False
+
+    if not place(
+        object_tf_name="dropoutbox",
+        pre_place_offset=np.array([0, 0, 0.2]),
+        pre_compliance_offset=None,
+        pre_place_pad_angle=0.0,
+        post_place_offset=np.array([0, 0, 0.2]),
+        compliance_depth=0,
+        parallel_open_aperture=0.04,
+        arm=arm,
+        gripper=gripper,
+        func_switch_ctrl=switch_controllers,
+        compliance_target_pub=compliance_target_pub,
+    ):
+        rospy.logerr("Could not perform place operation, aborting")
+        return False
+
+    return True
+
+
+def disassemble_belt(arm, gripper, switch_controllers, compliance_target_pub):
+    if not arm.set_planning_frame("board_cad_parent", max_wait_time=30):
+        rospy.logerr("Could not find objects transform in scene. Aborting...")
+        return False
+    H_pulley_board, _, _, _, = get_pose(
+        arm.tf_buffer,
+        "board_cad_parent",
+        "big_pulley",
+        rospy.Time.now(),
+        max_wait_time=10,
+    )
+    # For the following offsets, Y is up, and X is away from the pulley
+
+    # Align fingertip Z with board -Z, X with -Y and Y with -X
+    H_gripp_align = np.eye(4)
+    # Z is -Z
+    H_gripp_align[:3, 2] = np.array([0, 0, -1])
+    # X is -Y
+    H_gripp_align[:3, 0] = np.array([0, -1, 0])
+    # Y is -X
+    H_gripp_align[:3, 1] = np.cross(H_gripp_align[:3, 2], H_gripp_align[:3, 0])
+
+    # Tilting head 60 degrees on Z axis
+    H_gripp_align = np.matmul(
+        H_gripp_align, euler_matrix(0, 0, np.deg2rad(60))
+    )
+
+    # Pre-place belt on top of pulley:
+    waypoint = H_gripp_align.copy()
+    waypoint[:3, 3] = H_pulley_board[:3, 3]
+    waypoint[0, 3] += 0.02
+    waypoint[1, 3] += 0.1
+    waypoint[2, 3] += 0.06
+    # br.sendTransform(tarray_to_tmsg(waypoint, "board_cad_parent", "next_pose"))
+    arm.set_tool_pose(waypoint)
+    gripper.send_goal_and_wait(
+        ParallelSpinPadsGripperCommandGoal(
+            par_target_pos=0.04,
+            par_max_effort=100,
+            par_velocity=50,
+            actuate_parallel=True,
+            actuate_pads=False,
+        )
+    )
+
+    # Pre-place belt on side of pulley:
+    waypoint = H_gripp_align.copy()
+    waypoint[:3, 3] = H_pulley_board[:3, 3]
+    waypoint[0, 3] += 0.02
+    waypoint[1, 3] += 0.03
+    waypoint[2, 3] += 0.06
+    arm.set_tool_pose(waypoint)
+
+    # Place belt on belt:
+    waypoint = H_gripp_align.copy()
+    waypoint[:3, 3] = H_pulley_board[:3, 3]
+    waypoint[0, 3] += -0.01
+    waypoint[1, 3] += 0.03
+    waypoint[2, 3] += 0.06
+    arm.set_tool_pose(waypoint)
+
+    gripper.send_goal_and_wait(
+        ParallelSpinPadsGripperCommandGoal(
+            par_target_pos=0,
+            par_max_effort=100,
+            par_velocity=50,
+            actuate_parallel=True,
+            actuate_pads=False,
+        )
+    )
+
+    # Pre-place belt on side of pulley:
+    waypoint = H_gripp_align.copy()
+    waypoint[:3, 3] = H_pulley_board[:3, 3]
+    waypoint[0, 3] += 0.02
+    waypoint[1, 3] += 0.03
+    waypoint[2, 3] += 0.06
+    arm.set_tool_pose(waypoint)
+
+    # Pre-place belt on side of pulley:
+    waypoint = H_gripp_align.copy()
+    waypoint[:3, 3] = H_pulley_board[:3, 3]
+    waypoint[0, 3] += 0.02
+    waypoint[1, 3] += 0.03
+    waypoint[2, 3] += -0.015
+    arm.set_tool_pose(waypoint)
+
+    # Pre-place belt on side of pulley:
+    waypoint = H_gripp_align.copy()
+    waypoint[:3, 3] = H_pulley_board[:3, 3]
+    waypoint[0, 3] += 0.02
+    waypoint[1, 3] += 0
+    waypoint[2, 3] += 0
+    arm.set_tool_pose(waypoint)
+
+    # Pre-place belt on side of pulley:
+    waypoint = H_gripp_align.copy()
+    waypoint[:3, 3] = H_pulley_board[:3, 3]
+    waypoint[0, 3] += 0.02
+    waypoint[1, 3] += 0
+    waypoint[2, 3] += 0.05
+    arm.set_tool_pose(waypoint)
+
+    # Pre-place belt on side of pulley:
+    waypoint = H_gripp_align.copy()
+    waypoint[:3, 3] = H_pulley_board[:3, 3]
+    waypoint[0, 3] += 0.05
+    waypoint[1, 3] += 0.1
+    waypoint[2, 3] += 0.05
+    arm.set_tool_pose(waypoint)
+
+    H_gripp_align = np.matmul(
+        H_gripp_align, euler_matrix(0, 0, np.deg2rad(-60))
+    )
+    waypoint = H_gripp_align.copy()
+    waypoint[:3, 3] = H_pulley_board[:3, 3]
+    waypoint[0, 3] += 0.05
+    waypoint[1, 3] += 0.1
+    waypoint[2, 3] += 0.05
+    arm.set_tool_pose(waypoint)
+
+    if not place(
+        object_tf_name="dropoutbox",
+        pre_place_offset=np.array([0, 0, 0.2]),
+        pre_compliance_offset=None,
+        pre_place_pad_angle=0.0,
+        post_place_offset=np.array([0, 0, 0.2]),
+        compliance_depth=0,
+        parallel_open_aperture=0.04,
+        arm=arm,
+        gripper=gripper,
+        func_switch_ctrl=switch_controllers,
+        compliance_target_pub=compliance_target_pub,
+    ):
+        rospy.logerr("Could not perform place operation, aborting")
+        return False
+
+
+def prepare_screws_disassemble(parallel_arm, parallel_gripper):
+
+    if not parallel_arm.set_planning_frame("dropoutbox", max_wait_time=30):
+        rospy.logerr(
+            "Could not find dropout box transform in scene. Aborting..."
+        )
+        return False
+
+    # We want with same ori as the dropout box, but tilted in Y:
+
+    H_gripp_align = np.eye(4)
+
+    # # We first set a high Z to avoid collisions when re-orienting the arm
+    # waypoint = H_gripp_align.copy()
+    # waypoint[2, 3] = 0.3
+    # parallel_arm.set_tool_pose(waypoint)
+
+    # We then move to the final pose
+    waypoint = H_gripp_align.copy()
+    waypoint = np.matmul(euler_matrix(0, np.deg2rad(45), 0), waypoint)
+    waypoint[0, 3] = 0.12
+    waypoint[2, 3] = 0.15
+    parallel_arm.set_tool_pose(waypoint)
+
+    parallel_gripper.send_goal_and_wait(
+        ParallelSpinPadsGripperCommandGoal(
+            par_target_pos=0.05,
+            par_max_effort=100,
+            par_velocity=50,
+            actuate_parallel=True,
+            actuate_pads=False,
+        )
+    )
+
+
+def disassemble_screw(
+    arm,
+    rot_gripper,
+    parallel_gripper,
+    switch_controllers,
+    compliance_target_pub,
+    name="bolt_m4_0",
+    vertical=False,
+):
+    if not arm.set_planning_frame(name, max_wait_time=30):
+        rospy.logerr("Could not find object in scene. Aborting...")
+        return False
+
+    H_gripp_align = np.eye(4)
+    # Gripper Z is object's -Z
+    H_gripp_align[:3, 2] = np.array([0, 0, -1])
+    # Gripper Y is object's X
+    H_gripp_align[:3, 1] = np.array([1, 0, 0])
+    # Gripper X is object's cross Y and Z
+    H_gripp_align[:3, 0] = np.cross(H_gripp_align[:3, 1], H_gripp_align[:3, 2])
+
+    pre_insert = H_gripp_align.copy()
+
+    pre_insert[2, 3] = 0.1
+    arm.set_tool_pose(pre_insert)
+
+    insert = H_gripp_align.copy()
+
+    # M8
+    insert[2, 3] = 0.02
+    # # M6
+    # insert[2, 3] = 0.008
+    arm.set_tool_pose(insert)
+    # quit()
+    # if not vertical:
+    #     initial_pos, _, _, _, = get_pose(
+    #         tf_buffer=arm.tf_buffer,
+    #         frame="ur5e_B/tool0",
+    #         reference_frame="ur5e_B/base_link",
+    #         time=rospy.Time(0),
+    #         max_wait_time=5,
+    #     )
+    #     rospy.sleep(1)
+    #     service_str = "/ur5e_B/my_cartesian_compliance_controller/stiffness"
+    #     client = dynamic_reconfigure.client.Client(service_str)
+
+    #     params = {
+    #         "trans_x": 1000,
+    #         "trans_y": 1000,
+    #         "trans_z": 1000,
+    #     }
+    #     client.update_configuration(params)
+    #     rospy.sleep(1)
+    #     enable_compliance(switch_controllers)
+
+    #     spiral_down(
+    #         compliance_target_pub,
+    #         initial_pos,
+    #         # initial_radius=0.002,
+    #         initial_radius=0.001,
+    #         final_radius=0.0,
+    #         depth=0.04,
+    #         jump_size=-0.01,
+    #         angle_step_size=1,
+    #         base_link="ur5e_B/base_link",
+    #     )
+
+    # else:
+    insert[2, 3] = 0.005
+    # # M6
+    # insert[2, 3] = 0.008
+    arm.set_tool_pose(insert)
+    actuate_rotary_gripper(rot_gripper, 1, 10, 3)
+    # compliance_target_pub.publish(
+    #     tarray_to_posemsg(initial_pos, "ur5e_B/base_link")
+    # )
+    # rospy.sleep(4)
+    # disable_compliance(switch_controllers)
+
+    # insert = H_gripp_align.copy()
+    # insert[2, 3] = 0.1
+    arm.set_tool_pose(pre_insert)
+
+    parallel_gripper.send_goal_and_wait(
+        ParallelSpinPadsGripperCommandGoal(
+            par_target_pos=0.08,
+            par_max_effort=100,
+            par_velocity=50,
+            actuate_parallel=True,
+            actuate_pads=False,
+        )
+    )
+
+    # Move the screw to the parallel jaw to drop it
+    if not arm.set_planning_frame("dropoutbox", max_wait_time=30):
+        rospy.logerr("Could not find object in scene. Aborting...")
+        return False
+    waypoint = H_gripp_align.copy()
+    waypoint = np.matmul(euler_matrix(0, np.deg2rad(45), 0), waypoint)
+    waypoint[0, 3] = 0.16
+    waypoint[2, 3] = 0.22
+    if not arm.set_tool_pose(waypoint):
+        rospy.logerr(
+            "Could not reach waypoint 1 for droping screw. Aborting..."
+        )
+        return False
+
+    # Move the screw to the parallel jaw to drop it
+    waypoint = H_gripp_align.copy()
+    waypoint = np.matmul(euler_matrix(0, np.deg2rad(45), 0), waypoint)
+    waypoint[0, 3] = 0.12
+    waypoint[2, 3] = 0.18
+    if not arm.set_tool_pose(waypoint):
+        rospy.logerr(
+            "Could not reach waypoint 2 for droping screw. Aborting..."
+        )
+        return False
+
+    parallel_gripper.send_goal_and_wait(
+        ParallelSpinPadsGripperCommandGoal(
+            par_target_pos=0.0,
+            par_max_effort=50,
+            par_velocity=50,
+            actuate_parallel=True,
+            actuate_pads=False,
+        )
+    )
+
+    waypoint[0, 3] += 0.01
+    waypoint[2, 3] += 0.01
+    if not arm.set_tool_pose(waypoint):
+        rospy.logerr(
+            "Could not reach waypoint 3 for droping screw. Aborting..."
+        )
+        return False
+
+    parallel_gripper.send_goal_and_wait(
+        ParallelSpinPadsGripperCommandGoal(
+            par_target_pos=0.08,
+            par_max_effort=100,
+            par_velocity=50,
+            actuate_parallel=True,
+            actuate_pads=False,
+        )
+    )
+
+
+def main():
+    # Initialise node
+    rospy.init_node("disassembly_node")
+
+    ref_frame = "world"
+    parallel_tool_name = "ur5e_A_fingertip"
+    parallel_mv = "ur5e_A_arm"
+
+    nfs_mv = "ur5e_B_arm"
+    nfs_tool_name = "ur5e_B_outer"
+    # nfs_tool_name = "ur5e_B_nfs_fingertip"
+
+    tf_buffer = Buffer()
+    tf_listener = TransformListener(tf_buffer)
+
+    parallel_compliance_target_pub = rospy.Publisher(
+        "/ur5e_A/my_motion_control_handle/ur5e_A/target_frame",
+        PoseStamped,
+        queue_size=100,
+    )
+
+    nfs_compliance_target_pub = rospy.Publisher(
+        "/ur5e_B/my_motion_control_handle/ur5e_B/target_frame",
+        PoseStamped,
+        queue_size=100,
+    )
+
+    parallel_jaw = SimpleActionClient(
+        "/parallel_gripper", ParallelSpinPadsGripperCommandAction
+    )
+    rospy.logwarn("Waiting for parallel gripper action server...")
+    parallel_jaw.wait_for_server()
+    rospy.logwarn("Server found")
+
+    rospy.logwarn("Waiting for controller manager...")
+
+    parallel_arm_switch_controllers = rospy.ServiceProxy(
+        "/ur5e_A/controller_manager/switch_controller", SwitchController
+    )
+
+    nfs_arm_switch_controllers = rospy.ServiceProxy(
+        "/ur5e_B/controller_manager/switch_controller", SwitchController
+    )
+
+    rospy.wait_for_service("/nfs/request")
+    nfs_server = rospy.ServiceProxy("/nfs/request", NFSRequest)
+
+    parallel_jaw_arm = NdxArm(
+        move_group_name=parallel_mv,
+        tool_frame=parallel_tool_name,
+        planning_frame=ref_frame,
+        velocity_scale=0.08,
+        acc_scale=0.08,
+        # velocity_scale=0.02,
+        # acc_scale=0.02,
+        tf_buffer=tf_buffer,
+        planner="RRTstar",
+        # planner="RRTConnect",
+        planning_time=1,
+    )
+
+    add_table(parallel_jaw_arm.scene)
+    disable_compliance(parallel_arm_switch_controllers)
+
+    # disassemble_ethernet(
+    #     parallel_jaw_arm,
+    #     parallel_jaw,
+    #     parallel_arm_switch_controllers,
+    #     parallel_compliance_target_pub,
+    # )
+
+    # disassemble_small_gear(
+    #     parallel_jaw_arm,
+    #     parallel_jaw,
+    #     parallel_arm_switch_controllers,
+    #     parallel_compliance_target_pub,
+    # )
+    # disassemble_big_gear(
+    #     parallel_jaw_arm,
+    #     parallel_jaw,
+    #     parallel_arm_switch_controllers,
+    #     parallel_compliance_target_pub,
+    # )
+
+    # # quit()
+    # disassemble_small_round_peg(
+    #     parallel_jaw_arm,
+    #     parallel_jaw,
+    #     parallel_arm_switch_controllers,
+    #     parallel_compliance_target_pub,
+    # )
+    # disassemble_big_square_peg(
+    #     parallel_jaw_arm,
+    #     parallel_jaw,
+    #     parallel_arm_switch_controllers,
+    #     parallel_compliance_target_pub,
+    # )
+    # disassemble_big_round_peg(
+    #     parallel_jaw_arm,
+    #     parallel_jaw,
+    #     parallel_arm_switch_controllers,
+    #     parallel_compliance_target_pub,
+    # )
+    # # quit()
+    # disassemble_small_square_peg(
+    #     parallel_jaw_arm,
+    #     parallel_jaw,
+    #     parallel_arm_switch_controllers,
+    #     parallel_compliance_target_pub,
+    # )
+
+    # disassemble_bnc(
+    #     parallel_jaw_arm,
+    #     parallel_jaw,
+    #     parallel_arm_switch_controllers,
+    #     parallel_compliance_target_pub,
+    # )
+    # disassemble_cable_connectors(
+    #     parallel_jaw_arm,
+    #     parallel_jaw,
+    #     parallel_arm_switch_controllers,
+    #     parallel_compliance_target_pub,
+    # )
+    # disassemble_belt(
+    #     parallel_jaw_arm,
+    #     parallel_jaw,
+    #     parallel_arm_switch_controllers,
+    #     parallel_compliance_target_pub,
+    # )
+
+    # prepare_screws_disassemble(parallel_jaw_arm, parallel_jaw)
+    # del parallel_jaw_arm
+
+    disable_compliance(nfs_arm_switch_controllers)
+    nfs_arm = NdxArm(
+        move_group_name=nfs_mv,
+        tool_frame=nfs_tool_name,
+        planning_frame=ref_frame,
+        velocity_scale=0.08,
+        acc_scale=0.08,
+        # velocity_scale=0.02,
+        # acc_scale=0.02,
+        tf_buffer=tf_buffer,
+        planner="RRTstar",
+        # planner="RRTConnect",
+        planning_time=1,
+    )
+
+    disassemble_screw(
+        nfs_arm,
+        nfs_server,
+        parallel_jaw,
+        nfs_arm_switch_controllers,
+        nfs_compliance_target_pub,
+        "bolt_m8_0",
+        vertical=False,
+    )
+
+    # disassemble_screw(
+    #     nfs_arm,
+    #     nfs_server,
+    #     parallel_jaw,
+    #     nfs_arm_switch_controllers,
+    #     nfs_compliance_target_pub,
+    #     "bolt_m8_1",
+    #     vertical=False,
+    # )
+
+
+if __name__ == "__main__":
+    main()

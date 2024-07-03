@@ -1,0 +1,91 @@
+#! /usr/bin/env python
+
+import rospy
+import actionlib
+import odrive
+from odrive.enums import *
+from rgmc_manipulation.srv import NFSRequest, NFSRequestResponse
+
+# float64 target_vel
+# float64 target_torque
+# bool stop
+# bool clear_error
+# ---
+# bool result
+
+
+class NeedForSpeedDriver:
+    def __init__(self, velocity=5) -> None:
+        self.od = odrive.find_any()
+        self.stop()
+        self.clear_error()
+        rospy.sleep(1)
+        rospy.loginfo("Performing odrive calibration...")
+        self.od.axis0.requested_state = AXIS_STATE_FULL_CALIBRATION_SEQUENCE
+        rospy.sleep(15)
+        rospy.loginfo("Done")
+        rospy.loginfo("Starting server")
+        self.od.axis0.controller.config.control_mode = (
+            CONTROL_MODE_TORQUE_CONTROL
+        )
+        self.od.axis0.controller.config.vel_limit = velocity
+        self.stop()
+        # rospy.sleep(20)
+        rospy.Service("nfs/request", NFSRequest, self.handle_request)
+
+    def handle_request(self, req: NFSRequest):
+        rospy.loginfo("Request received:")
+        rospy.loginfo(req)
+        if req.stop:
+            self.stop()
+        if req.clear_error:
+            self.clear_error()
+        if req.set_motor_state:
+            self.set_vel(req.target_vel)
+            self.set_torque(req.target_torque)
+        elif req.move:
+            self.move()
+        return NFSRequestResponse(True)
+
+    # def
+    def get_vel(self):
+        return self.od.axis0.controller.config.vel_limit
+
+    def set_vel(self, max_velocity):
+        # speed change
+        self.od.axis0.requested_state = AXIS_STATE_IDLE
+        rospy.sleep(1)
+        self.od.axis0.controller.config.vel_limit = max_velocity
+
+    def get_torque(self):
+        return self.od.axis0.controller.input_torque
+
+    def set_torque(self, max_torque):
+        # torque change
+        self.od.axis0.controller.input_torque = max_torque
+
+    def stop(self):
+        # stop
+        self.od.axis0.requested_state = AXIS_STATE_IDLE
+
+    def move(self):
+        # stop
+        self.od.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+
+    def clear_error(self):
+        self.od.clear_errors()
+
+    def run(self):
+        rospy.spin()
+
+
+if __name__ == "__main__":
+    # Initialise node
+    rospy.init_node("need_for_speed_driver")
+    nfsd = NeedForSpeedDriver()
+    nfsd.run()
+    # od = odrive.find_any()
+
+    # od.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+    # od.axis0.controller.config.control_mode = CONTROL_MODE_TORQUE_CONTROL
+    # od.axis0.controller.input_torque = 0.01

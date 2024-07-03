@@ -1,0 +1,30 @@
+# Params for the parallel gripper node
+
+# Port
+port: '/dev/ttyUSB1'
+clutch_port: '/dev/ttyUSB2'
+
+# Motor IDs
+parallel_id: 3
+rotor_id: 4
+clutch_id: 1
+
+# Gripper state publish rate
+publish_rate: 10  # [Hz]
+
+# Path to calibration file
+cal_path: "~/calibration/demat_gripper_cal.csv"
+
+# URDF joint names whose states are published
+joint_names:
+  - ur5_finger_mount_joint1
+  - ur5_finger_mount_joint2
+
+# Maximum gripper aperture [m]
+max_aperture: 0.14
+
+# Default motor velocity, if not specified in action goal
+default_velocity: 30        # Motor speed
+
+# Default effort, if not specified in action goal
+default_effort: 40          # Motor current

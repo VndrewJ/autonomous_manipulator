@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="multi_joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+      <param name="/use_gui" value="false"/>
+      <rosparam param="/source_list">[ur5e_A/joint_states, ur5e_B/joint_states, gripper_joint_states, rotary_gripper_js]</rosparam>
+    </node>
+</launch>

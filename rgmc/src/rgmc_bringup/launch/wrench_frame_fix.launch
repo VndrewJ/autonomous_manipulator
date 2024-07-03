@@ -1,0 +1,19 @@
+<launch>
+
+    <!-- <param name="target_frame" value="ur5e_A_fingertip"/> -->
+  <node pkg="ndx_util" type="wrench_frame_changer_node" name="change_wrench_frame_node_A" respawn="false" output="screen">
+    <param name="target_frame" value="ur5e_A_fingertip"/>
+    <param name="input_topic" value="/ur5e_A/wrench"/>
+    <param name="output_topic" value="/ur5e_A/cartesian_compliance_controller/target_wrench"/>
+    <param name="draw_force_vector" value="True"/>
+  </node>
+  
+    <!-- <param name="target_frame" value="ur5e_B_fingertip"/> -->
+  <node pkg="ndx_util" type="wrench_frame_changer_node" name="change_wrench_frame_node_B" respawn="false" output="screen">
+    <param name="target_frame" value="ur5e_B_fingertip"/>
+    <param name="input_topic" value="/ur5e_B/wrench"/>
+    <param name="output_topic" value="/ur5e_B/cartesian_compliance_controller/target_wrench"/>
+    <param name="draw_force_vector" value="True"/>
+  </node>
+
+</launch>

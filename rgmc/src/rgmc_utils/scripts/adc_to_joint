@@ -1,0 +1,46 @@
+#! /usr/bin/env python
+
+import rospy
+import yaml
+import sys
+from std_msgs.msg import UInt16
+from sensor_msgs.msg import JointState
+
+
+class ArduinoPotToJs:
+    def __init__(self) -> None:
+        self.js_pub = rospy.Publisher(
+            "/rotary_gripper_js", JointState, queue_size=10
+        )
+        rospy.Subscriber("/adc", UInt16, self.callback)
+
+    def callback(self, data: UInt16):
+        pot_value = data.data
+        in_min = 271
+        in_max = 1023
+        out_min = 0
+        out_max = 0.028
+        joint_value = (pot_value - in_min) * (out_max - out_min) / (
+            in_max - in_min
+        ) + out_min
+        js = JointState()
+        js.name = ["ur5e_B_joint"]
+        js.position = [joint_value]
+        js.velocity = [0]
+        js.effort = [0]
+        self.js_pub.publish(js)
+
+    def run(self):
+        rospy.spin()
+
+
+def main():
+    # Initialise node
+    rospy.init_node("adc_to_joint")
+    print("a")
+    pot = ArduinoPotToJs()
+    pot.run()
+
+
+if __name__ == "__main__":
+    main()

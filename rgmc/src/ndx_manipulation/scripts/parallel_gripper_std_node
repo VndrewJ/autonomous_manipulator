@@ -1,0 +1,179 @@
+#! /usr/bin/env python
+
+import time
+import numpy as np
+from threading import Lock
+import rospy
+import actionlib
+from sensor_msgs.msg import JointState
+from control_msgs.msg import GripperCommandAction, GripperCommandFeedback, GripperCommandResult
+from ndx_manipulation.Parallel_XM430 import Parallel_XM430
+
+
+class ParallelGripper(object):
+    # create messages that are used to publish feedback/result
+    _feedback = GripperCommandFeedback()
+    _result = GripperCommandResult()
+
+    def __init__(self, name):
+
+        # Mutex for motor IO
+        self.mutex = Lock()
+
+        # Parameters
+        self.rate_hz = rospy.get_param("~publish_rate")
+        self.default_velocity = rospy.get_param("~default_velocity")
+        self.default_effort = rospy.get_param("~default_effort")
+        self.joint_names = rospy.get_param("~joint_names")
+        self.max_aperture = rospy.get_param("~max_aperture")
+
+        # Start gripper
+        self.gripper = Parallel_XM430(rospy.get_param("~port", '/dev/ttyUSB0'),
+                                      motor_id=rospy.get_param("~motor_id", 1),
+                                      default_velocity=self.default_velocity,
+                                      default_grasp_current=self.default_effort)
+
+        # Calibrate gripper
+        # self.hand.shutdown()
+        self.gripper.calibrate(cal_file_path=rospy.get_param("~cal_file_path"), recalibrate=False)
+
+        # Gripper variables
+        self.motor_pos = self.gripper.get_positions()
+        self.motor_cur = self.gripper.get_currents()
+        self.motor_aperture = self.gripper.motor.max_pos - self.gripper.motor.min_pos
+
+        # Initialise joint state publisher
+        self._js_pub = rospy.Publisher('joint_states', JointState, queue_size=1)
+
+        # Start action server
+        self._action_name = name
+        self._as = actionlib.SimpleActionServer(self._action_name, GripperCommandAction,
+                                                execute_cb=self.execute_callback, auto_start=False)
+        self._as.start()
+
+    def execute_callback(self, goal):
+        # Variables
+        rate = rospy.Rate(self.rate_hz)
+        success = True
+        reached_goal = False
+        stalled = True
+
+        # Bound requested aperture
+        desired_aperture = goal.command.position
+        if desired_aperture > self.max_aperture:
+            desired_aperture = self.max_aperture
+        if desired_aperture < 0:
+            desired_aperture = 0
+
+        # Extract goal
+        goal_pos = self.gripper.motor.max_pos - int(self.motor_aperture * (desired_aperture / self.max_aperture))
+        max_effort = int(goal.command.max_effort)
+
+        # Flip effort if opening
+        if goal_pos < self.motor_pos:
+            max_effort = -max_effort
+
+        # Handle missing input
+        if max_effort == 0:
+            max_effort = self.default_effort
+
+        # Print inputs
+        rospy.loginfo("{}: Executing, setting gripper to position {} with max effort {}"
+                      .format(self._action_name, goal_pos, max_effort))
+
+        # Set motor velocity, position and effort
+        self.mutex.acquire()
+        self.gripper.set_goal_position(pos_lst=[goal_pos], curr_lst=[max_effort])
+        self.mutex.release()
+
+        # Loop until at goal or preempted
+        pos = self.motor_pos
+        cur = self.motor_cur
+        aperture = (float(self.gripper.motor.max_pos - pos[0]) / self.motor_aperture) * self.max_aperture
+        while np.sign(max_effort)*(max_effort - cur[0]) > 0:
+            rate.sleep()
+
+            # Exit if motor stalled and current not reaching limit
+            if pos == self.motor_pos:
+                time.sleep(0.5)
+                if pos == self.motor_pos:
+                    break
+
+            # Get motor position and current
+            pos = self.motor_pos
+            cur = self.motor_cur
+
+            # Compute current aperture
+            aperture = (float(self.gripper.motor.max_pos - pos[0]) / self.motor_aperture) * self.max_aperture
+
+            # If at position goal, break loop
+            if abs((goal_pos - pos[0])) < 15:
+                stalled = False
+                reached_goal = True
+                break
+
+            # Check that preempt has not been requested by the client
+            if self._as.is_preempt_requested():
+                rospy.loginfo("{}: Preempted".format(self._action_name))
+                self._as.set_preempted()
+                success = False
+                break
+
+            # Publish feedback
+            self._feedback.position = aperture
+            self._feedback.effort = cur[0]
+            self._feedback.reached_goal = reached_goal
+            self._feedback.stalled = stalled
+            self._as.publish_feedback(self._feedback)
+
+        if success:
+            # Set goal positions as they are
+            self.mutex.acquire()
+            self.gripper.set_goal_position(pos)
+            self.mutex.release()
+
+            # Return result
+            self._result.position = aperture
+            self._result.effort = cur[0]
+            self._result.reached_goal = reached_goal
+            self._result.stalled = stalled
+            rospy.loginfo("{}: Succeeded".format(self._action_name))
+            self._as.set_succeeded(self._result)
+
+    def run(self):
+        # Set rate
+        rate = rospy.Rate(self.rate_hz)
+
+        # Loop and publish gripper state
+        while not rospy.is_shutdown():
+
+            # Get motor position and current
+            self.mutex.acquire()
+            self.motor_pos = self.gripper.get_positions()
+            self.motor_cur = self.gripper.get_currents()
+            self.mutex.release()
+
+            # Construct message
+            msg = JointState()
+            msg.header.stamp = rospy.Time.now()
+            msg.name = self.joint_names
+            finger_pos = (float(self.gripper.motor.max_pos - self.motor_pos[0]) / self.motor_aperture) * self.max_aperture / 2
+            msg.position = [finger_pos, finger_pos]
+            msg.effort = [self.motor_cur[0], self.motor_cur[0]]
+
+            # Publish message
+            self._js_pub.publish(msg)
+
+            rate.sleep()
+
+        # Shut down gripper before exiting
+        self.gripper.shutdown()
+
+
+if __name__ == '__main__':
+    # Initialise node
+    rospy.init_node('parallel_gripper_std')
+
+    # Start server
+    c = ParallelGripper(rospy.get_name())
+    c.run()

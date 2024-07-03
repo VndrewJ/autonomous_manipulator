@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find rgmc_bringup)/launch/ur5e_A_bringup.launch" />
+    <include file="$(find rgmc_bringup)/launch/ur5e_B_bringup.launch" />
+</launch>

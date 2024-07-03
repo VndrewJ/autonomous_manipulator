@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!-- <arg name="model" default="$(find rgmc_description)/urdf/dual_ur5e_setup.xacro"/> -->
+
+  <arg name="gui" default="true" />
+  <arg name="rvizconfig" default="$(find rgmc_description)/config/setup.rviz" />
+
+  <!-- <param name="robot_description" command="$(find xacro)/xacro $(arg model)" /> -->
+  <param name="use_gui" value="$(arg gui)" />
+
+  <!-- <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui"
+  type="joint_state_publisher_gui">
+    <param name="rate" type="int" value="100" />
+  </node> 
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">  
+    <param name="publish_frequency" value="200" />
+    <param name="use_tf_static" value="false" />
+    <param name="ignore_timestamp" value="true" />
+  </node> -->
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+  <!-- <node name="multi_joint_state_publisher" pkg="joint_state_publisher"
+  type="joint_state_publisher">
+    <param name="/rate" value="200"/>
+    <rosparam param="/source_list">[ur5e_A/joint_states,ur5e_B/joint_states, parallel_gripper_js,
+  rotary_gripper_js]</rosparam>
+  </node> -->
+
+</launch>

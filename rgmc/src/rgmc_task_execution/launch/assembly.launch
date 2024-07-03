@@ -1,0 +1,5 @@
+<launch>
+
+  <node pkg="rgmc_task_execution" type="assembly_node" name="assembly_node" respawn="false"/>
+
+</launch>

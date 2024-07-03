@@ -1,0 +1,73 @@
+#
+# Definition of all trackable objects
+# Identifier corresponds to Trackable ID set in Tracking Tools
+#
+rigid_bodies:
+    '3':
+        pose: kit_layout/pose
+        pose2d: kit_layout/ground_pose
+        odom: kit_layout/Odom
+        tf: tf
+        child_frame_id: kit_layout/tracker_base
+        parent_frame_id: world
+    '4':
+        pose: board/pose
+        pose2d: board/ground_pose
+        odom: board/Odom
+        tf: tf
+        child_frame_id: board/tracker_base
+        parent_frame_id: world
+    '5':
+        pose: bolt_rack/pose
+        pose2d: bolt_rack/ground_pose
+        odom: bolt_rack/Odom
+        tf: tf
+        child_frame_id: bolt_rack/tracker_base
+        parent_frame_id: world
+    '11':
+        pose: left_interface/pose
+        pose2d: left_interface/ground_pose
+        odom: left_interface/Odom
+        tf: tf
+        child_frame_id: left_interface/tracker_base
+        parent_frame_id: world
+    '13':
+        pose: right_interface/pose
+        pose2d: right_interface/ground_pose
+        odom: right_interface/Odom
+        tf: tf
+        child_frame_id: right_interface/tracker_base
+        parent_frame_id: world
+    '16':
+        pose: kit_layout_iros/pose
+        pose2d: kit_layout_iros/ground_pose
+        odom: kit_layout_iros/Odom
+        tf: tf
+        child_frame_id: kit_layout_iros/tracker_base
+        parent_frame_id: world
+    '17':
+        pose: fingerjig/pose
+        pose2d: fingerjig/ground_pose
+        odom: fingerjig/Odom
+        tf: tf
+        child_frame_id: fingerjig/tracker_base
+        parent_frame_id: world
+    '22':
+        pose: calibration_square/pose
+        pose2d: calibration_square/ground_pose
+        odom: calibration_square/Odom
+        tf: tf
+        child_frame_id: calibration_square/tracker_base
+        parent_frame_id: world
+    '26':
+        pose: calibration_bracelet_ur5/pose
+        pose2d: calibration_bracelet_ur5/ground_pose
+        odom: calibration_bracelet_ur5/Odom
+        tf: tf
+        child_frame_id: calibration_bracelet_ur5/tracker_base
+        parent_frame_id: world
+optitrack_config:
+        multicast_address: "224.0.0.1"
+        command_port: 1510
+        data_port: 1511
+        enable_optitrack: true

@@ -1,0 +1,10 @@
+reference_frame: world
+refframe2cam_transforms:
+  ur5e_A_base:
+    rotation_w: 0.9348242537021327
+    rotation_x: 0.008268611541527882
+    rotation_y: 0.004042951433456369
+    rotation_z: 0.35499140735675894
+    translation_x: -0.22756120158201387
+    translation_y: 0.47139253883008697
+    translation_z: -0.8122148138659593

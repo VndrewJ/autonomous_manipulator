@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+  <!--ur5e parameters files -->
+  <arg name="kinematics_params" default="$(find rgmc_bringup)/config/ur5e_B/ndx_ur5e_kinematics.yaml"/>
+  <arg name="joint_limit_params" value="$(find rgmc_bringup)/config/ur5e_B/joint_limits.yaml"/>
+  <!-- <arg name="kinematics_params" value="$(find ndx_ur5e_bringup)/config/ur5e/ndx_ur5e_kinematics.yaml"/> -->
+  <arg name="physical_params" value="$(find rgmc_bringup)/config/ur5e_B/physical_parameters.yaml"/>
+  <arg name="visual_params" value="$(find rgmc_bringup)/config/ur5e_B/visual_parameters.yaml"/>
+  <!--common parameters -->
+  <!-- <arg name="transmission_hw_interface" value="hardware_interface/PositionJointInterface" />
+  <arg name="safety_limits" value="false" doc="If True, enable the safety limits controller"/>
+  <arg name="safety_pos_margin" value="0.15" doc="The lower/upper limits in the safety controller" />
+  <arg name="safety_k_position" value="20" doc="Used to set k position in the safety controller" /> -->
+
+  <!-- use common launch file and pass all arguments to it -->
+  <!-- <include file="$(find ur_description)/launch/load_ur.launch" pass_all_args="true"/> -->
+  <!-- <param name="robot_description" command="$(find xacro)/xacro $(find rgmc_description)/urdf/ndx_ur5e_pillar_setup.xacro" /> -->
+  <param name="robot_description" command="$(find xacro)/xacro $(find rgmc_description)/urdf/dual_ur5e_setup.xacro" />
+</launch>

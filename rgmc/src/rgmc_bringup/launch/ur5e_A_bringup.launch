@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+  <group ns="ur5e_A">
+    <arg name="debug" value="false" doc="Debug flag that will get passed on to ur_common.launch"/>
+    <arg name="robot_ip" value="ur5e_A" doc="IP address by which the robot can be reached."/>
+    <arg name="tf_prefix" value="ur5e_A/" doc="tf_prefix used for the robot."/>
+    
+    <arg name="reverse_port" value="60001" doc="Port that will be opened by the driver to allow direct communication between the driver and the robot controller."/>    
+    <arg name="script_sender_port" value="60002" doc="The driver will offer an interface to receive the program's URScript on this port. If the robot cannot connect to this port, `External Control` will stop immediately."/>
+    <arg name="trajectory_port" value="60003" doc="Port that will be opened by the driver to allow trajectory forwarding."/>
+    <arg name="script_command_port" value="60004" doc="Port used for forwarding script commands to the robot."/>
+
+    <arg name="controllers" value="joint_state_controller force_torque_sensor_controller speed_scaling_state_controller pos_joint_traj_controller" doc="Controllers that are activated by value."/>
+    
+    <arg name="stopped_controllers" value="cartesian_compliance_controller scaled_pos_joint_traj_controller joint_group_vel_controller motion_control_handle" doc="Controllers that are initally loaded, but not started."/>
+    
+    <arg name="controller_config_file" value="$(find rgmc_bringup)/config/ur5e_A/ur5e_controllers.yaml" doc="Config file used for defining the ROS-Control controllers."/>
+    
+    <arg name="robot_description_file" value="$(find rgmc_description)/launch/load_ur5e_A_description.launch" doc="Robot description launch file."/>
+    
+    <arg name="kinematics_config" value="$(find rgmc_bringup)/config/ur5e_A/ndx_ur5e_kinematics.yaml" doc="Kinematics config file used for calibration correction. This will be used to verify the robot's calibration is matching the robot_description."/>
+    
+    <arg name="headless_mode" value="false" doc="Automatically send URScript to robot to execute. On e-Series this does require the robot to be in 'remote-control' mode. With this, the URCap is not needed on the robot."/>
+
+    <include file="$(find ur_robot_driver)/launch/ur5e_bringup.launch" pass_all_args="true" />
+  </group>
+</launch>

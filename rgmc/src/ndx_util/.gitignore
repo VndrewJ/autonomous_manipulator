@@ -1,0 +1,4 @@
+# Ignore Pycharm IDE folder
+.idea/
+*.csv
+*.pyc

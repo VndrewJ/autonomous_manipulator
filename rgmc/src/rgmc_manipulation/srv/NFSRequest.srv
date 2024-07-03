@@ -1,0 +1,8 @@
+float64 target_vel
+float64 target_torque
+bool set_motor_state
+bool move
+bool stop
+bool clear_error
+---
+bool result

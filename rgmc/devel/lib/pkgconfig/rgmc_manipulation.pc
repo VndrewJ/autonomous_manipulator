@@ -1,0 +1,8 @@
+prefix=/home/akoh751/autonomous_assembly_robot/rgmc/devel
+
+Name: rgmc_manipulation
+Description: Description of rgmc_manipulation
+Version: 0.0.0
+Cflags: -I/home/akoh751/autonomous_assembly_robot/rgmc/devel/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime actionlib_msgs

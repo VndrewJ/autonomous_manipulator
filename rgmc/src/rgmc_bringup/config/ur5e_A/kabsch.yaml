@@ -1,0 +1,10 @@
+reference_frame: world
+refframe2cam_transforms:
+  ur5e_A_tracking_plate:
+    rotation_w: 0.6970793234722199
+    rotation_x: 0.0037024178521912793
+    rotation_y: 0.002028136786380599
+    rotation_z: 0.7169815866190257
+    translation_x: 0.5470944260837076
+    translation_y: 0.6280401388180316
+    translation_z: 0.03487018422630883

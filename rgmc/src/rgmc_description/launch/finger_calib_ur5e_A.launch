@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="tf2_ros" type="static_transform_publisher" name="finger_transform" args="0 0 0 1.570796327 0 0 fingerjig/tracker_base fingerjig" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="hand_calib" args="0 0 0 0 0 0 ur5e_A_hand ur5e_A_hand_calib" />
+
+    <arg name="output_file" default="$(find rgmc_bringup)/config/ur5e_A/finger_calibration.yaml"/>
+    <arg name="ref_parent" default="ur5e_A_hand"/>
+
+    <arg name="parenttfs" value="[            
+                                    ur5e_A_hand,
+                                    ur5e_A_hand_calib
+                                ]"/>
+    <arg name="tfs2match" value="[
+                                    ur5e_A_fingertip,
+                                    fingerjig,
+                                ]"/>
+    
+    <arg name="no_of_cal_positions" value="1"/>
+    <arg name="no_of_samples_per_position" value="10"/>
+    <arg name="max_time_diff" value="0.0"/>
+
+    <node name="extrinsics_calib" pkg="ndx_util" type="tf_calibration" output="screen">        
+    <!-- <node name="multi_camera_extrinsics_calibration_node" pkg="multimarker_tracking" type="multi_camera_extrinsics_calibration_node" output="screen">         -->
+        <param name="output_file" value="$(arg output_file)" />
+        <param name="ref_parent" value="$(arg ref_parent)"/>
+        <rosparam param="parenttfs" subst_value="True"> $(arg parenttfs)</rosparam>        
+        <rosparam param="tfs2match" subst_value="True"> $(arg tfs2match)</rosparam>     
+        <param name="no_of_cal_positions" value="$(arg no_of_cal_positions)" />
+        <param name="no_of_samples_per_position" value="$(arg no_of_samples_per_position)"/>   
+        <param name="max_time_diff" value="$(arg max_time_diff)"/>   
+    </node>
+</launch>

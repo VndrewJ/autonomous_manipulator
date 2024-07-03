@@ -1,0 +1,7 @@
+set(rgmc_manipulation_SETUP_PY_SETUP_MODULE "distutils.core")
+set(rgmc_manipulation_SETUP_PY_VERSION "0.0.0")
+set(rgmc_manipulation_SETUP_PY_SCRIPTS "")
+set(rgmc_manipulation_SETUP_PY_PACKAGES "rgmc_manipulation")
+set(rgmc_manipulation_SETUP_PY_PACKAGE_DIRS "src/rgmc_manipulation")
+set(rgmc_manipulation_SETUP_PY_MODULES "")
+set(rgmc_manipulation_SETUP_PY_MODULE_DIRS "")

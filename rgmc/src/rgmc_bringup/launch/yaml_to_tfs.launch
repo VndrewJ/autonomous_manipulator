@@ -1,0 +1,39 @@
+<launch>
+
+  <!-- Kitmat -->
+  <node pkg="rgmc_utils" type="yaml2tf_node" name="yaml2tf_kit_node" respawn="false" required="true"
+    output="screen">
+    <param name="output_rate" value="50" />
+    <param name="transforms_file"
+      value="$(find rgmc_description)/config/cad_configs/kit_layout_transforms.yaml" />
+    <param name="positions_file"
+      value="$(find rgmc_description)/config/cad_configs/kitmat_obj_poses.yaml" />
+  </node>
+
+  <include file="$(find ndx_util)/launch/pub_mesh.launch" pass_all_args="true">
+    <arg name="mesh_url" value="package://rgmc_description/cad/practice/KitMatv1.stl" />
+    <arg name="ref_frame" value="kit_layout_cad_parent" />
+    <arg name="id" value="0" />
+    <arg name="scale" value="0.001" />
+  </include>
+
+  <!-- Board -->
+  <node pkg="rgmc_utils" type="yaml2tf_node" name="yaml2tf_board_node" respawn="false"
+    required="true" output="screen">
+    <param name="output_rate" value="50" />
+    <param name="transforms_file"
+      value="$(find rgmc_description)/config/cad_configs/board_transforms.yaml" />
+    <param name="positions_file"
+      value="$(find rgmc_description)/config/cad_configs/board_obj_poses.yaml" />
+  </node>
+
+  <include file="$(find ndx_util)/launch/pub_mesh.launch" pass_all_args="true">
+    <arg name="mesh_url"
+      value="package://rgmc_description/cad/practice/IROS_2022_TaskBoard_mirror_freecad_simple.stl" />
+    <arg name="ref_frame" value="board_cad_parent" />
+    <arg name="id" value="1" />
+    <arg name="scale" value="1.0" />
+  </include>
+
+
+</launch>

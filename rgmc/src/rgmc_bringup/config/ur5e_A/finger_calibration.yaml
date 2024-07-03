@@ -1,0 +1,10 @@
+reference_frame: ur5e_A_hand
+refframe2cam_transforms:
+  ur5e_A_hand_calib:
+    rotation_w: 1.0
+    rotation_x: 0.0
+    rotation_y: 0.0
+    rotation_z: 0.0
+    translation_x: -8.149545246571854e-05
+    translation_y: -0.2153297312690919
+    translation_z: -0.0013197552364311916

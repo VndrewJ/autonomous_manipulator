@@ -1,0 +1,28 @@
+# When performing an action that uses the parallel jaw and the pads at the same time,
+# The parallel jaw one will be done first.
+# GOAL
+float64 par_target_pos  # Parallel gripper target aperture (in meters)
+float64 par_max_effort  # Parallel gripper motor max motor current
+float64 par_velocity    # Parallel gripper motor velocity
+bool actuate_parallel   # Whether to actuate the parallel gripper or not
+float64 pads_target_pos # Fingertip pads target angular position (in radians)
+float64 pads_max_effort # Fingertip pads motor max current (in mA)
+float64 pads_velocity   # Fingertip pads motor target velocity
+bool actuate_pads       # Whether to actuate the rotary pads or not
+bool reverse_pads_actuation       # Actuate rotary pads in reverse
+---
+# RESULT
+float64 par_final_position  # The final parallel gripper gap size (in meters)
+float64 par_final_effort    # The final parallel gripper effort exerted (motor current)
+bool par_stalled      # True iff the gripper is exerting max effort and not moving
+bool par_reached_goal # True iff the gripper position has reached the commanded setpoint
+float64[] pads_final_position # The final fingertip pads angular position (in radians)
+float64[] pads_final_effort   # The final fingertip pads effort (in mA)
+bool pads_stalled      # True iff one of the pads is exerting max effort and not moving
+bool pads_reached_goal # True iff both pads reached goal position
+---
+# FEEDBACK
+float64 par_position  # The current parallel gripper gap size (in meters)
+float64 par_effort    # The current parallel gripper effort exerted (motor current)
+float64[] pads_position # The current fingertip pads angular position (in radians)
+float64[] pads_effort   # The current fingertip pads effort (in mA)

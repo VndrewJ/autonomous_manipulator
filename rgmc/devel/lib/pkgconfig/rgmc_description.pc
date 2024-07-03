@@ -1,0 +1,8 @@
+prefix=/home/akoh751/autonomous_assembly_robot/rgmc/devel
+
+Name: rgmc_description
+Description: Description of rgmc_description
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<robot name="robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:property name="deg2rad" value="${pi/180}" />
+  <xacro:property name="module_offset" value="0 0 0.41325" />
+  <xacro:include filename="$(find ndx_description)/urdf/base_xacros.xacro"/>
+
+  <xacro:macro name="nfs" params="connected_to:='' ns:='' rpy:='0 0 0' xyz:='0 0 0' ">
+
+    <xacro:unless value="${connected_to == ''}">
+      <xacro:joint_xacro name="${ns}_attachment" parent="${connected_to}" child="${ns}_center_module" type="fixed" xyz="${xyz}" rpy="${rpy}" axis="0 0 0"/>
+    </xacro:unless>
+
+    <xacro:link_xacro filename='rotory_module_outterModule' name="${ns}_center_module" rpy="${0} 0 ${0}" xyz="0 0 0" scale='0.001 0.001 0.001' />
+    <xacro:joint_xacro name="${ns}_joint" parent="${ns}_center_module" child="${ns}_fingertip" type="prismatic" xyz="${module_offset}" limit="${dict(effort=20, lower=0.0, upper=0.028, velocity=0.2)}"  axis="0 0 -1"/>
+
+
+    <xacro:link_xacro filename='rotory_module_centermodule' name="${ns}_fingertip" rpy="${0} 0 ${0}" xyz="0 0 0" scale='0.001 0.001 0.001' />
+
+  </xacro:macro>
+
+</robot>
+
+

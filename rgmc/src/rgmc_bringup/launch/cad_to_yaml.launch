@@ -1,0 +1,25 @@
+<launch>
+  <!-- Kitmat -->
+  <!-- <node pkg="rgmc_utils" type="extract_cad_poses_node" name="extract_cad_poses_kit_node"
+    respawn="false" output="screen">
+    <param name="transforms_file"
+      value="$(find rgmc_description)/config/cad_configs/kit_layout_transforms.yaml" />
+    <param name="cad_file" value="$(find rgmc_description)/cad/practice/KitMatV1_freecad.step" />
+    <param name="output_yaml_file"
+      value="$(find rgmc_description)/config/cad_configs/kitmat_obj_poses.yaml" />
+  </node> -->
+
+  <!-- Board -->
+  <node pkg="rgmc_utils" type="extract_cad_poses_node" name="extract_cad_poses_board_node"
+    respawn="false" output="screen">
+    <param name="transforms_file"
+      value="$(find
+  rgmc_description)/config/cad_configs/board_transforms.yaml" />
+    <param name="cad_file"
+      value="$(find
+  rgmc_description)/cad/practice/IROS_2022_TaskBoard_mirror_freecad_bolts.STEP" />
+    <param name="output_yaml_file"
+      value="$(find
+  rgmc_description)/config/cad_configs/board_obj_poses.yaml" />
+  </node>
+</launch>

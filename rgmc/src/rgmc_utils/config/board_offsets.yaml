@@ -1,0 +1,290 @@
+board_cad_parent:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "ICRA2023"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: -X
+    cad_Z_axis_is_ros: Z
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: 0
+  # Output transform name:
+  output_tf_name: board_cad_parent  
+  tf_parent: board/tracker_base
+
+ethernet_connector_head:
+    # The name of the cad object (on Freecad)
+    cad_input_name: "ethernet_cable_head"
+    # cad_input_name: "ethernet cable head"
+    # This is the transformationt the tf will undergo before being published
+    desired_transformation:
+      cad_X_axis_is_ros: -Y
+      cad_Z_axis_is_ros: Z
+      shift_origin_x_by: 0
+      shift_origin_y_by: 0
+      shift_origin_z_by: -0.019
+    # Output transform name:
+    output_tf_name: ethernet_connector_head
+    tf_parent: board_cad_parent
+
+
+big_square_peg_hole:
+    # The name of the cad object (on Freecad)
+    cad_input_name: "KET12_Square_12mm"
+    # cad_input_name: "ethernet cable head"
+    # This is the transformationt the tf will undergo before being published
+    desired_transformation:
+      cad_X_axis_is_ros: Y
+      cad_Z_axis_is_ros: -Z
+      shift_origin_x_by: 0
+      shift_origin_y_by: 0
+      shift_origin_z_by: -0.005
+    # Output transform name:
+    output_tf_name: big_square_peg_hole
+    tf_parent: board_cad_parent
+
+small_square_peg_hole:
+    # The name of the cad object (on Freecad)
+    cad_input_name: "KET8"
+    # cad_input_name: "ethernet cable head"
+    # This is the transformationt the tf will undergo before being published
+    desired_transformation:
+      cad_X_axis_is_ros: -Z
+      cad_Z_axis_is_ros: -Y
+      shift_origin_x_by: 0
+      shift_origin_y_by: 0
+      shift_origin_z_by: 0.02
+    # Output transform name:
+    output_tf_name: small_square_peg_hole
+    tf_parent: board_cad_parent
+
+big_round_peg_hole:
+    # The name of the cad object (on Freecad)
+    cad_input_name: "RGOCG16-50_16mm"
+    # cad_input_name: "ethernet cable head"
+    # This is the transformationt the tf will undergo before being published
+    desired_transformation:
+      cad_X_axis_is_ros: X
+      cad_Z_axis_is_ros: -Z
+      shift_origin_x_by: 0
+      shift_origin_y_by: 0
+      shift_origin_z_by: -0.005
+    # Output transform name:
+    output_tf_name: big_round_peg_hole
+    tf_parent: board_cad_parent
+
+small_round_peg_hole:
+    # The name of the cad object (on Freecad)
+    cad_input_name: "RGOCG8-50_8mm"
+    # cad_input_name: "ethernet cable head"
+    # This is the transformationt the tf will undergo before being published
+    desired_transformation:
+      cad_X_axis_is_ros: -X
+      cad_Z_axis_is_ros: -Z
+      shift_origin_x_by: 0
+      shift_origin_y_by: 0
+      shift_origin_z_by: -0.005
+    # Output transform name:
+    output_tf_name: small_round_peg_hole
+    tf_parent: board_cad_parent
+
+cable_connector_01_hole:
+    # The name of the cad object (on Freecad)
+    cad_input_name: "AT06_2S_LED1221"
+    # cad_input_name: "ethernet cable head"
+    # This is the transformationt the tf will undergo before being published
+    desired_transformation:
+      cad_X_axis_is_ros: -Z
+      cad_Z_axis_is_ros: Y
+      shift_origin_x_by: 0
+      shift_origin_y_by: 0
+      shift_origin_z_by: -0.00188
+    # Output transform name:
+    output_tf_name: cable_connector_01_hole
+    tf_parent: board_cad_parent
+
+cable_connector_02_hole:
+    # The name of the cad object (on Freecad)
+    cad_input_name: "AT06_2S_LED1220"
+    # cad_input_name: "ethernet cable head"
+    # This is the transformationt the tf will undergo before being published
+    desired_transformation:
+      cad_X_axis_is_ros: -Z
+      cad_Z_axis_is_ros: Y
+      shift_origin_x_by: 0
+      shift_origin_y_by: 0
+      shift_origin_z_by: -0.00188
+    # Output transform name:
+    output_tf_name: cable_connector_02_hole
+    tf_parent: board_cad_parent
+
+small_gear_shaft:
+    # The name of the cad object (on Freecad)
+    cad_input_name: "GEABP1.0-20-10-B-10_Gear_20teeth"
+    # cad_input_name: "ethernet cable head"
+    # This is the transformationt the tf will undergo before being published
+    desired_transformation:
+      cad_X_axis_is_ros: -X
+      cad_Z_axis_is_ros: -Z
+      shift_origin_x_by: 0
+      shift_origin_y_by: 0
+      shift_origin_z_by: 0
+    # Output transform name:
+    output_tf_name: small_gear_shaft
+    tf_parent: board_cad_parent
+
+big_gear_shaft:
+    # The name of the cad object (on Freecad)
+    cad_input_name: "GEABP1.0-60-10-B-10_Gear_60teeth"
+    # cad_input_name: "ethernet cable head"
+    # This is the transformationt the tf will undergo before being published
+    desired_transformation:
+      cad_X_axis_is_ros: -X
+      cad_Z_axis_is_ros: -Z
+      shift_origin_x_by: 0
+      shift_origin_y_by: 0
+      shift_origin_z_by: 0
+    # Output transform name:
+    output_tf_name: big_gear_shaft
+    tf_parent: board_cad_parent
+
+bnc_male:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "BNCP-1.5A-K"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: -Y
+    cad_Z_axis_is_ros: -X
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.02098
+  # Output transform name:
+  output_tf_name: bnc_male
+  tf_parent: board_cad_parent
+
+big_pulley:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "MBRF60_2_H10"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: X
+    cad_Z_axis_is_ros: Z
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: 0
+  # Output transform name:
+  output_tf_name: big_pulley
+  tf_parent: board_cad_parent
+
+small_pulley:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "MBRF48_2_H10"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: X
+    cad_Z_axis_is_ros: Z
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: 0
+  # Output transform name:
+  output_tf_name: small_pulley
+  tf_parent: board_cad_parent
+
+
+cable_holder:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "Elastic_retainer_stool"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: X
+    cad_Z_axis_is_ros: Z
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: 0
+  # Output transform name:
+  output_tf_name: cable_holder
+  tf_parent: board_cad_parent
+
+bolt_m8_0:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "M8x026"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: -Z
+    cad_Z_axis_is_ros: X
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.016
+  # Output transform name:
+  output_tf_name: bolt_m8_0
+  tf_parent: board_cad_parent
+
+bolt_m4_0:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "M4_bolt_(2)_Valor_predeterminado013"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: X
+    cad_Z_axis_is_ros: Z
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.0094
+  # Output transform name:
+  output_tf_name: bolt_m4_0
+  tf_parent: board_cad_parent
+
+bolt_m6_0:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "M6x038"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: -Z
+    cad_Z_axis_is_ros: X
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.014
+  # Output transform name:
+  output_tf_name: bolt_m6_0
+  tf_parent: board_cad_parent
+
+bolt_m6_1:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "M6x039"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: -Z
+    cad_Z_axis_is_ros: X
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.014
+  # Output transform name:
+  output_tf_name: bolt_m6_1
+  tf_parent: board_cad_parent
+
+bolt_m8_1:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "M8x025"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: -Z
+    cad_Z_axis_is_ros: Y
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.009
+  # Output transform name:
+  output_tf_name: bolt_m8_1
+  tf_parent: board_cad_parent
+
+bolt_m4_1:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "M4_bolt_(2)_Valor_predeterminado014"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: X
+    cad_Z_axis_is_ros: Z
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.0094
+  # Output transform name:
+  output_tf_name: bolt_m4_1
+  tf_parent: board_cad_parent

@@ -1,0 +1,28 @@
+# Params for the parallel gripper node
+
+# Port
+port: '/dev/ttyUSB0'
+
+# Motor ID
+motor_id: 1
+
+# Gripper state publish rate
+publish_rate: 100  # [Hz]
+js_topic: parallel_gripper_js  # [Hz]
+
+# Path to calibration file
+cal_file_path: "~/parallel_cal.csv"
+
+# URDF joint names whose states are published
+joint_names:
+  - ur5e_A_finger_mount_joint1
+  - ur5e_A_finger_mount_joint2
+
+# Maximum gripper aperture [m]
+max_aperture: 0.14
+
+# Default motor velocity, if not specified in action goal
+default_velocity: 30        # Motor speed
+
+# Default effort, if not specified in action goal
+default_effort: 100          # Motor current

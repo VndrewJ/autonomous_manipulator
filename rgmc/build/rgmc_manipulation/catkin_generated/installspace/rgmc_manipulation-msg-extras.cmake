@@ -1,0 +1,2 @@
+set(rgmc_manipulation_MESSAGE_FILES "msg/ParallelSpinPadsGripperCommandAction.msg;msg/ParallelSpinPadsGripperCommandActionGoal.msg;msg/ParallelSpinPadsGripperCommandActionResult.msg;msg/ParallelSpinPadsGripperCommandActionFeedback.msg;msg/ParallelSpinPadsGripperCommandGoal.msg;msg/ParallelSpinPadsGripperCommandResult.msg;msg/ParallelSpinPadsGripperCommandFeedback.msg")
+set(rgmc_manipulation_SERVICE_FILES "srv/NFSRequest.srv")

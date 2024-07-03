@@ -1,0 +1,170 @@
+kit_layout_cad_parent:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "KitMatv1"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: X
+    cad_Z_axis_is_ros: -Z
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: 0
+  # Output transform name:
+  output_tf_name: kit_layout_cad_parent  
+  tf_parent: kit_layout/tracker_base
+
+big_square_peg:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "KET12_Square_12mm"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: X
+    cad_Z_axis_is_ros: Z
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.02754
+    # shift_origin_z_by: -0.00654
+  # Output transform name:
+  output_tf_name: big_square_peg
+  tf_parent: kit_layout_cad_parent
+
+ethernet_connector:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "ethernet_cable_head"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: -Y
+    cad_Z_axis_is_ros: X
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    # shift_origin_z_by: 0
+    shift_origin_z_by: -0.00645
+    # shift_origin_z_by: -0.1
+  # Output transform name:
+  output_tf_name: ethernet_connector
+  tf_parent: kit_layout_cad_parent
+
+small_square_peg:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "KET4_Square_4mm"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: -Y
+    cad_Z_axis_is_ros: X
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.00454
+  # Output transform name:
+  output_tf_name: small_square_peg
+  tf_parent: kit_layout_cad_parent
+
+big_round_peg:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "RGOCG16-50_16mm"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: X
+    cad_Z_axis_is_ros: Z
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.02754
+  # Output transform name:
+  output_tf_name: big_round_peg
+  tf_parent: kit_layout_cad_parent
+
+small_round_peg:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "RGOCG8-50_8mm"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: Y
+    cad_Z_axis_is_ros: X
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.00327
+  # Output transform name:
+  output_tf_name: small_round_peg
+  tf_parent: kit_layout_cad_parent
+
+cable_conector_01:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "AT06_2S_LED1220"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: X
+    cad_Z_axis_is_ros: Y
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.00959
+  # Output transform name:
+  output_tf_name: cable_conector_01
+  tf_parent: kit_layout_cad_parent
+
+cable_conector_02:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "AT06_2S_LED1221"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: X
+    cad_Z_axis_is_ros: Y
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.00959
+  # Output transform name:
+  output_tf_name: cable_conector_02
+  tf_parent: kit_layout_cad_parent
+
+small_gear:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "GEABP1.0-20-10-B-10_Gear_20teeth"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: Y
+    cad_Z_axis_is_ros: -Z
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.00254
+  # Output transform name:
+  output_tf_name: small_gear
+  tf_parent: kit_layout_cad_parent
+
+big_gear:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "GEABP1.0-60-10-B-10_Gear_60teeth"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: -X
+    cad_Z_axis_is_ros: -Z
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.00254
+  # Output transform name:
+  output_tf_name: big_gear
+  tf_parent: kit_layout_cad_parent
+
+bnc_female:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "BNCP-1.5A-K"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: -X
+    cad_Z_axis_is_ros: Y
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.01243
+  # Output transform name:
+  output_tf_name: bnc_female
+  tf_parent: kit_layout_cad_parent
+
+belt:
+  # The name of the cad object (on Freecad)
+  cad_input_name: "small_round_belt_kit_pose"
+  # This is the transformationt the tf will undergo before being published
+  desired_transformation:
+    cad_X_axis_is_ros: Y
+    cad_Z_axis_is_ros: X
+    shift_origin_x_by: 0
+    shift_origin_y_by: 0
+    shift_origin_z_by: -0.00406
+  # Output transform name:
+  output_tf_name: belt
+  tf_parent: kit_layout_cad_parent

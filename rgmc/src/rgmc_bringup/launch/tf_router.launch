@@ -1,0 +1,7 @@
+<launch>
+    <node name="target_publisher_ur5e_A" pkg="ndx_util" type="tf_router" output="screen" >
+        <param name="tf_name" type="string" value="ur5e_A_target_pose" />
+        <param name="tf_parent" type="string" value="ur5e_A/base_link" />
+        <param name="output_topic" type="string" value="/ur5e_A/compliance_target_frame" />
+    </node>
+</launch>
