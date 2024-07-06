@@ -19,22 +19,22 @@ add_custom_target(rgmc_manipulation_generate_messages ALL)
 
 get_filename_component(_filename "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandAction.msg" NAME_WE)
 add_custom_target(_rgmc_manipulation_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rgmc_manipulation" "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandAction.msg" "rgmc_manipulation/ParallelSpinPadsGripperCommandResult:rgmc_manipulation/ParallelSpinPadsGripperCommandGoal:actionlib_msgs/GoalStatus:rgmc_manipulation/ParallelSpinPadsGripperCommandActionGoal:rgmc_manipulation/ParallelSpinPadsGripperCommandActionFeedback:rgmc_manipulation/ParallelSpinPadsGripperCommandFeedback:std_msgs/Header:actionlib_msgs/GoalID:rgmc_manipulation/ParallelSpinPadsGripperCommandActionResult"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rgmc_manipulation" "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandAction.msg" "actionlib_msgs/GoalStatus:rgmc_manipulation/ParallelSpinPadsGripperCommandFeedback:rgmc_manipulation/ParallelSpinPadsGripperCommandResult:rgmc_manipulation/ParallelSpinPadsGripperCommandActionFeedback:rgmc_manipulation/ParallelSpinPadsGripperCommandGoal:std_msgs/Header:rgmc_manipulation/ParallelSpinPadsGripperCommandActionGoal:actionlib_msgs/GoalID:rgmc_manipulation/ParallelSpinPadsGripperCommandActionResult"
 )
 
 get_filename_component(_filename "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg" NAME_WE)
 add_custom_target(_rgmc_manipulation_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rgmc_manipulation" "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg" "rgmc_manipulation/ParallelSpinPadsGripperCommandGoal:std_msgs/Header:actionlib_msgs/GoalID"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rgmc_manipulation" "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg" "actionlib_msgs/GoalID:std_msgs/Header:rgmc_manipulation/ParallelSpinPadsGripperCommandGoal"
 )
 
 get_filename_component(_filename "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg" NAME_WE)
 add_custom_target(_rgmc_manipulation_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rgmc_manipulation" "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg" "actionlib_msgs/GoalID:std_msgs/Header:actionlib_msgs/GoalStatus:rgmc_manipulation/ParallelSpinPadsGripperCommandResult"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rgmc_manipulation" "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg" "rgmc_manipulation/ParallelSpinPadsGripperCommandResult:actionlib_msgs/GoalStatus:actionlib_msgs/GoalID:std_msgs/Header"
 )
 
 get_filename_component(_filename "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg" NAME_WE)
 add_custom_target(_rgmc_manipulation_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rgmc_manipulation" "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg" "actionlib_msgs/GoalID:std_msgs/Header:actionlib_msgs/GoalStatus:rgmc_manipulation/ParallelSpinPadsGripperCommandFeedback"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "rgmc_manipulation" "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg" "rgmc_manipulation/ParallelSpinPadsGripperCommandFeedback:actionlib_msgs/GoalStatus:actionlib_msgs/GoalID:std_msgs/Header"
 )
 
 get_filename_component(_filename "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg" NAME_WE)
@@ -66,25 +66,25 @@ add_custom_target(_rgmc_manipulation_generate_messages_check_deps_${_filename}
 _generate_msg_cpp(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandAction.msg"
   "${MSG_I_FLAGS}"
-  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
+  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_cpp(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg"
   "${MSG_I_FLAGS}"
-  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg"
+  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_cpp(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg"
+  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_cpp(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg"
+  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_cpp(rgmc_manipulation
@@ -155,25 +155,25 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS rgmc_manipulation_generate_messages
 _generate_msg_eus(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandAction.msg"
   "${MSG_I_FLAGS}"
-  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
+  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_eus(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg"
   "${MSG_I_FLAGS}"
-  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg"
+  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_eus(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg"
+  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_eus(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg"
+  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_eus(rgmc_manipulation
@@ -244,25 +244,25 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS rgmc_manipulation_generate_messages
 _generate_msg_lisp(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandAction.msg"
   "${MSG_I_FLAGS}"
-  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
+  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_lisp(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg"
   "${MSG_I_FLAGS}"
-  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg"
+  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_lisp(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg"
+  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_lisp(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg"
+  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_lisp(rgmc_manipulation
@@ -333,25 +333,25 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS rgmc_manipulation_generate_messages
 _generate_msg_nodejs(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandAction.msg"
   "${MSG_I_FLAGS}"
-  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
+  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_nodejs(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg"
   "${MSG_I_FLAGS}"
-  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg"
+  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_nodejs(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg"
+  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_nodejs(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg"
+  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_nodejs(rgmc_manipulation
@@ -422,25 +422,25 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS rgmc_manipulation_generate_messages
 _generate_msg_py(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandAction.msg"
   "${MSG_I_FLAGS}"
-  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
+  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_py(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionGoal.msg"
   "${MSG_I_FLAGS}"
-  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg"
+  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandGoal.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_py(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionResult.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg"
+  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandResult.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_py(rgmc_manipulation
   "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandActionFeedback.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg"
+  "/home/akoh751/autonomous_assembly_robot/rgmc/devel/share/rgmc_manipulation/msg/ParallelSpinPadsGripperCommandFeedback.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalStatus.msg;/opt/ros/noetic/share/actionlib_msgs/cmake/../msg/GoalID.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/rgmc_manipulation
 )
 _generate_msg_py(rgmc_manipulation

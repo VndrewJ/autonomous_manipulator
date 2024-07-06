@@ -32,7 +32,7 @@ def display_images(image_queue):
             if image_type == 'color':
                 cv2.imshow("Color Image", cv_image)
             elif image_type == 'depth':
-                cv2.imshow("Depth Image", cv_image / 10.0)
+                cv2.imshow("Depth Image", cv_image)
             cv2.waitKey(1)
         except queue.Empty:
             continue
