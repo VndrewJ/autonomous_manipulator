@@ -1,0 +1,2 @@
+
+-DCATKIN_DEVEL_PREFIX=/home/mechp4p/p4p/autonomous_manipulator/robot_pos/devel -DCMAKE_INSTALL_PREFIX=/home/mechp4p/p4p/autonomous_manipulator/robot_pos/install -G Unix Makefiles
