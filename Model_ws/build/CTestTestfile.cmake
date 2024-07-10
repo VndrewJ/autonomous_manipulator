@@ -7,3 +7,4 @@
 subdirs("gtest")
 subdirs("shape_spawner")
 subdirs("get_angles")
+subdirs("collision_detector")

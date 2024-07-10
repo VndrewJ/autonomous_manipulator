@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="collision_detector" type="add_cylinder.py" name="add_cylinder" output="screen"/>
+</launch>

@@ -20,17 +20,17 @@ def publish_marker():
 
         marker.action = Marker.ADD
 
-        marker.pose.position.x = 0
-        marker.pose.position.y = 0
-        marker.pose.position.z = 1
+        marker.pose.position.x = 0.5
+        marker.pose.position.y = 0.5
+        marker.pose.position.z = 0.15
         marker.pose.orientation.x = 0.0
         marker.pose.orientation.y = 0.0
         marker.pose.orientation.z = 0.0
-        marker.pose.orientation.w = 1.0
+        marker.pose.orientation.w = 0.0
 
-        marker.scale.x = 1.0
-        marker.scale.y = 1.0
-        marker.scale.z = 2.0
+        marker.scale.x = 0.2
+        marker.scale.y = 0.2
+        marker.scale.z = 0.3
 
         marker.color.r = 0.0
         marker.color.g = 1.0

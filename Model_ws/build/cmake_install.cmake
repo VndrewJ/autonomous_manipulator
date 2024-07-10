@@ -133,6 +133,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/gtest/cmake_install.cmake")
   include("/home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/shape_spawner/cmake_install.cmake")
   include("/home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/get_angles/cmake_install.cmake")
+  include("/home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/collision_detector/cmake_install.cmake")
 
 endif()
 
