@@ -5,6 +5,7 @@
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
 subdirs("gtest")
+subdirs("camera_sim_config")
 subdirs("rgmc_moveit_config")
 subdirs("universal_robot/universal_robots")
 subdirs("rgmc_bringup")
@@ -14,6 +15,7 @@ subdirs("ndx_util")
 subdirs("rgmc_manipulation")
 subdirs("rgmc_task_execution")
 subdirs("rgmc_utils")
+subdirs("pcl_realsense")
 subdirs("pose_estimation")
 subdirs("universal_robot/ur10_moveit_config")
 subdirs("universal_robot/ur10e_moveit_config")

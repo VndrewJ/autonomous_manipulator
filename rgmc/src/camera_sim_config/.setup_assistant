@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: pose_estimation
+    relative_path: urdf/ur5e.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/ur5e_robot.srdf
+  CONFIG:
+    author_name: Andrew Koh
+    author_email: andyjkoh@gmail.com
+    generated_timestamp: 1720593682

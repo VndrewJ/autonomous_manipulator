@@ -1,0 +1,8 @@
+prefix=/home/akoh751/autonomous_assembly_robot/rgmc/install
+
+Name: camera_sim_config
+Description: Description of camera_sim_config
+Version: 0.3.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

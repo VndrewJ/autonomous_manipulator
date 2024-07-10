@@ -1,0 +1,6 @@
+<!-- realsense_d435i.launch -->
+<launch>
+  <node pkg="realsense2_camera" type="realsense2_camera_node" name="realsense2_camera">
+    <param name="enable_pointcloud" type="bool" value="true"/>
+  </node>
+</launch>
