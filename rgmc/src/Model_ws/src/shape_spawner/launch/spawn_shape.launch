@@ -1,0 +1,3 @@
+<launch>
+  <node pkg="shape_spawner" type="spawn_shape.py" name="shape_spawner" output="screen"/>
+</launch>
