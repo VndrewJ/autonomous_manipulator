@@ -1,0 +1,2 @@
+collision_detector:get_angles:shape_spawner
+-DCATKIN_DEVEL_PREFIX=/home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/devel -DCMAKE_INSTALL_PREFIX=/home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/install -G Unix Makefiles

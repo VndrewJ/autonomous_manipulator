@@ -1,0 +1,8 @@
+prefix=/home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/devel
+
+Name: collision_detector
+Description: Description of collision_detector
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
