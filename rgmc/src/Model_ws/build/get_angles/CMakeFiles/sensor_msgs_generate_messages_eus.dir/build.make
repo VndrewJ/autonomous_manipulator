@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/mechp4p/p4p/autonomous_manipulator/Model_ws/src
+CMAKE_SOURCE_DIR = /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build
+CMAKE_BINARY_DIR = /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build
 
 # Utility rule file for sensor_msgs_generate_messages_eus.
 
@@ -63,10 +63,10 @@ get_angles/CMakeFiles/sensor_msgs_generate_messages_eus.dir/build: sensor_msgs_g
 .PHONY : get_angles/CMakeFiles/sensor_msgs_generate_messages_eus.dir/build
 
 get_angles/CMakeFiles/sensor_msgs_generate_messages_eus.dir/clean:
-	cd /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/get_angles && $(CMAKE_COMMAND) -P CMakeFiles/sensor_msgs_generate_messages_eus.dir/cmake_clean.cmake
+	cd /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/get_angles && $(CMAKE_COMMAND) -P CMakeFiles/sensor_msgs_generate_messages_eus.dir/cmake_clean.cmake
 .PHONY : get_angles/CMakeFiles/sensor_msgs_generate_messages_eus.dir/clean
 
 get_angles/CMakeFiles/sensor_msgs_generate_messages_eus.dir/depend:
-	cd /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mechp4p/p4p/autonomous_manipulator/Model_ws/src /home/mechp4p/p4p/autonomous_manipulator/Model_ws/src/get_angles /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/get_angles /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/get_angles/CMakeFiles/sensor_msgs_generate_messages_eus.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src/get_angles /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/get_angles /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/get_angles/CMakeFiles/sensor_msgs_generate_messages_eus.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : get_angles/CMakeFiles/sensor_msgs_generate_messages_eus.dir/depend
 

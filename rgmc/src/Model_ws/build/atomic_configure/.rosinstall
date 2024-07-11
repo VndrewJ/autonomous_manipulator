@@ -1,2 +1,2 @@
 - setup-file:
-    local-name: /home/mechp4p/p4p/autonomous_manipulator/Model_ws/devel/setup.sh
+    local-name: /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/devel/setup.sh

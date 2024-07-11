@@ -1,4 +1,4 @@
-prefix=/home/mechp4p/p4p/autonomous_manipulator/Model_ws/devel
+prefix=/home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/devel
 
 Name: get_angles
 Description: Description of get_angles

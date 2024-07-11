@@ -1,8 +1,8 @@
-# Install script for directory: /home/mechp4p/p4p/autonomous_manipulator/Model_ws/src/get_angles
+# Install script for directory: /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src/get_angles
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/mechp4p/p4p/autonomous_manipulator/Model_ws/install")
+  set(CMAKE_INSTALL_PREFIX "/home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -38,17 +38,17 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/get_angles/catkin_generated/installspace/get_angles.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/get_angles/catkin_generated/installspace/get_angles.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/get_angles/cmake" TYPE FILE FILES
-    "/home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/get_angles/catkin_generated/installspace/get_anglesConfig.cmake"
-    "/home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/get_angles/catkin_generated/installspace/get_anglesConfig-version.cmake"
+    "/home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/get_angles/catkin_generated/installspace/get_anglesConfig.cmake"
+    "/home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/get_angles/catkin_generated/installspace/get_anglesConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/get_angles" TYPE FILE FILES "/home/mechp4p/p4p/autonomous_manipulator/Model_ws/src/get_angles/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/get_angles" TYPE FILE FILES "/home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src/get_angles/package.xml")
 endif()
 

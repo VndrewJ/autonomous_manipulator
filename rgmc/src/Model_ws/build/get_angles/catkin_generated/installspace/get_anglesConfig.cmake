@@ -67,14 +67,14 @@ set(get_angles_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(get_angles_SOURCE_PREFIX /home/mechp4p/p4p/autonomous_manipulator/Model_ws/src/get_angles)
-  set(get_angles_DEVEL_PREFIX /home/mechp4p/p4p/autonomous_manipulator/Model_ws/devel)
+  set(get_angles_SOURCE_PREFIX /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src/get_angles)
+  set(get_angles_DEVEL_PREFIX /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/devel)
   set(get_angles_INSTALL_PREFIX "")
   set(get_angles_PREFIX ${get_angles_DEVEL_PREFIX})
 else()
   set(get_angles_SOURCE_PREFIX "")
   set(get_angles_DEVEL_PREFIX "")
-  set(get_angles_INSTALL_PREFIX /home/mechp4p/p4p/autonomous_manipulator/Model_ws/install)
+  set(get_angles_INSTALL_PREFIX /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/install)
   set(get_angles_PREFIX ${get_angles_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/mechp4p/p4p/autonomous_manipulator/Model_ws/install/lib;/opt/ros/noetic/lib)
+    foreach(path /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/install/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

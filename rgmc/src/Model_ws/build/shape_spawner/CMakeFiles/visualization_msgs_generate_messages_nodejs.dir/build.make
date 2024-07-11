@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/mechp4p/p4p/autonomous_manipulator/Model_ws/src
+CMAKE_SOURCE_DIR = /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build
+CMAKE_BINARY_DIR = /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build
 
 # Utility rule file for visualization_msgs_generate_messages_nodejs.
 
@@ -63,10 +63,10 @@ shape_spawner/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/build: 
 .PHONY : shape_spawner/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/build
 
 shape_spawner/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/clean:
-	cd /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/shape_spawner && $(CMAKE_COMMAND) -P CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/cmake_clean.cmake
+	cd /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/shape_spawner && $(CMAKE_COMMAND) -P CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/cmake_clean.cmake
 .PHONY : shape_spawner/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/clean
 
 shape_spawner/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/depend:
-	cd /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mechp4p/p4p/autonomous_manipulator/Model_ws/src /home/mechp4p/p4p/autonomous_manipulator/Model_ws/src/shape_spawner /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/shape_spawner /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/shape_spawner/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src/shape_spawner /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/shape_spawner /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/shape_spawner/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : shape_spawner/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/depend
 

@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/mechp4p/p4p/autonomous_manipulator/Model_ws/src
+CMAKE_SOURCE_DIR = /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build
+CMAKE_BINARY_DIR = /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build
 
 # Utility rule file for shape_msgs_generate_messages_nodejs.
 
@@ -63,10 +63,10 @@ collision_detector/CMakeFiles/shape_msgs_generate_messages_nodejs.dir/build: sha
 .PHONY : collision_detector/CMakeFiles/shape_msgs_generate_messages_nodejs.dir/build
 
 collision_detector/CMakeFiles/shape_msgs_generate_messages_nodejs.dir/clean:
-	cd /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/collision_detector && $(CMAKE_COMMAND) -P CMakeFiles/shape_msgs_generate_messages_nodejs.dir/cmake_clean.cmake
+	cd /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/collision_detector && $(CMAKE_COMMAND) -P CMakeFiles/shape_msgs_generate_messages_nodejs.dir/cmake_clean.cmake
 .PHONY : collision_detector/CMakeFiles/shape_msgs_generate_messages_nodejs.dir/clean
 
 collision_detector/CMakeFiles/shape_msgs_generate_messages_nodejs.dir/depend:
-	cd /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mechp4p/p4p/autonomous_manipulator/Model_ws/src /home/mechp4p/p4p/autonomous_manipulator/Model_ws/src/collision_detector /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/collision_detector /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/collision_detector/CMakeFiles/shape_msgs_generate_messages_nodejs.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src/collision_detector /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/collision_detector /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/collision_detector/CMakeFiles/shape_msgs_generate_messages_nodejs.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : collision_detector/CMakeFiles/shape_msgs_generate_messages_nodejs.dir/depend
 

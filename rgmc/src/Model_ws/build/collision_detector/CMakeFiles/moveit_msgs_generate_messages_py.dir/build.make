@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/mechp4p/p4p/autonomous_manipulator/Model_ws/src
+CMAKE_SOURCE_DIR = /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build
+CMAKE_BINARY_DIR = /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build
 
 # Utility rule file for moveit_msgs_generate_messages_py.
 
@@ -63,10 +63,10 @@ collision_detector/CMakeFiles/moveit_msgs_generate_messages_py.dir/build: moveit
 .PHONY : collision_detector/CMakeFiles/moveit_msgs_generate_messages_py.dir/build
 
 collision_detector/CMakeFiles/moveit_msgs_generate_messages_py.dir/clean:
-	cd /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/collision_detector && $(CMAKE_COMMAND) -P CMakeFiles/moveit_msgs_generate_messages_py.dir/cmake_clean.cmake
+	cd /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/collision_detector && $(CMAKE_COMMAND) -P CMakeFiles/moveit_msgs_generate_messages_py.dir/cmake_clean.cmake
 .PHONY : collision_detector/CMakeFiles/moveit_msgs_generate_messages_py.dir/clean
 
 collision_detector/CMakeFiles/moveit_msgs_generate_messages_py.dir/depend:
-	cd /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mechp4p/p4p/autonomous_manipulator/Model_ws/src /home/mechp4p/p4p/autonomous_manipulator/Model_ws/src/collision_detector /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/collision_detector /home/mechp4p/p4p/autonomous_manipulator/Model_ws/build/collision_detector/CMakeFiles/moveit_msgs_generate_messages_py.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/src/collision_detector /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/collision_detector /home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/build/collision_detector/CMakeFiles/moveit_msgs_generate_messages_py.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : collision_detector/CMakeFiles/moveit_msgs_generate_messages_py.dir/depend
 
