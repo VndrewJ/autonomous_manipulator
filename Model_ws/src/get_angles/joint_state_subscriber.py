@@ -10,18 +10,18 @@ def joint_states_callback(data):
 
     pos = data.position
 
-    OT0 = [[mt.cos(pos[0]), 0, mt.sin(pos[0]), 0],
-           [mt.sin(pos[0]), 0, -mt.cos(pos[0]), 0],
+    OT0 = [[mt.cos(pos[2]), 0, mt.sin(pos[2]), 0],
+           [mt.sin(pos[2]), 0, -mt.cos(pos[2]), 0],
            [0, 1, 0, 0.1625],
            [0, 0, 0, 1]]
     
-    OT1 = [[mt.cos(pos[1]), -mt.sin(pos[1]), 0, -0.425 * mt.cos(pos[1])],
-           [mt.sin(pos[1]), mt.cos(pos[1]), 0, -0.425 * mt.sin(pos[1])],
+    OT1 = [[mt.cos(pos[1]), -mt.sin(pos[1]), 0, -0.425*mt.cos(pos[1])],
+           [mt.sin(pos[1]), mt.cos(pos[1]), 0, -0.425*mt.sin(pos[1])],
            [0, 0, 1, 0],
            [0, 0, 0, 1]]
     
-    OT2 = [[mt.cos(pos[2]), -mt.sin(pos[2]), 0, -0.3922 * mt.cos(pos[2])],
-           [mt.sin(pos[2]), mt.cos(pos[2]), 0, -0.3922 * mt.sin(pos[2])],
+    OT2 = [[mt.cos(pos[0]), -mt.sin(pos[0]), 0, -0.3922 * mt.cos(pos[0])],
+           [mt.sin(pos[0]), mt.cos(pos[0]), 0, -0.3922 * mt.sin(pos[0])],
            [0, 0, 1, 0],
            [0, 0, 0, 1]]
     
@@ -50,8 +50,8 @@ def joint_states_callback(data):
     alpha = mt.atan2(DP5[1][0]/mt.cos(beta),DP5[0][0]/mt.cos(beta))
     gamma = mt.atan2(DP5[2][1]/mt.cos(beta), DP5[2][2]/mt.cos(beta))
 
-    rospy.loginfo("\nX:      %s, \nY:      %s, \nZ:     %s, \nAlpha:  %s, \nBeta:  %s, \nGamma: %s", DP5[0][3], DP5[1][3], DP5[2][3], alpha, beta, gamma)
-    rospy.sleep(0.5)
+    rospy.loginfo("\nX:      %s, \nY:      %s, \nZ:      %s, \nAlpha:  %s, \nBeta:   %s, \nGamma:  %s", DP5[0][3], DP5[1][3], DP5[2][3], alpha, beta, gamma)
+#     rospy.loginfo("\n%s\n%s\n%s\n%s\n%s\n%s", mt.degrees(pos[0]), mt.degrees(pos[1]), mt.degrees(pos[2]), mt.degrees(pos[3]), mt.degrees(pos[4]), mt.degrees(pos[5]))
     
 
 def joint_state_subscriber():
