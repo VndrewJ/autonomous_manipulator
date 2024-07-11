@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="collision_detector" type="add_cylinder.py" name="add_cylinder" output="screen"/>
+  <node pkg="get_angles" type="joint_state_subscriber.py" name="joint_state_subscriber" output="screen"/>
+</launch>
