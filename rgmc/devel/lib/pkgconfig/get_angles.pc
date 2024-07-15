@@ -1,0 +1,8 @@
+prefix=/home/akoh751/autonomous_assembly_robot/rgmc/devel
+
+Name: get_angles
+Description: Description of get_angles
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

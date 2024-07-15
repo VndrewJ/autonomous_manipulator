@@ -56,17 +56,17 @@ CMAKE_BINARY_DIR = /home/akoh751/autonomous_assembly_robot/rgmc/build
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
 
-# Special rule for the target install/local
-install/local/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local/fast
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
 
 # Special rule for the target install
 install: preinstall
@@ -90,28 +90,16 @@ list_install_components/fast: list_install_components
 
 .PHONY : list_install_components/fast
 
-# Special rule for the target install/strip
-install/strip: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
 
-# Special rule for the target install/strip
-install/strip/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip/fast
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
 
-# Special rule for the target test
-test:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
-	/usr/bin/ctest --force-new-ctest-process $(ARGS)
-.PHONY : test
-
-# Special rule for the target test
-test/fast: test
-
-.PHONY : test/fast
+.PHONY : rebuild_cache/fast
 
 # Special rule for the target edit_cache
 edit_cache:
@@ -124,16 +112,28 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
 
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
+# Special rule for the target test
+test/fast: test
 
-.PHONY : rebuild_cache/fast
+.PHONY : test/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -168,34 +168,19 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-ndx_util/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f CMakeFiles/Makefile2 ndx_util/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
-.PHONY : ndx_util/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
+ndx_util/CMakeFiles/wrench_frame_changer_node.dir/rule:
+	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f CMakeFiles/Makefile2 ndx_util/CMakeFiles/wrench_frame_changer_node.dir/rule
+.PHONY : ndx_util/CMakeFiles/wrench_frame_changer_node.dir/rule
 
 # Convenience name for target.
-sensor_msgs_generate_messages_cpp: ndx_util/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/rule
+wrench_frame_changer_node: ndx_util/CMakeFiles/wrench_frame_changer_node.dir/rule
 
-.PHONY : sensor_msgs_generate_messages_cpp
+.PHONY : wrench_frame_changer_node
 
 # fast build rule for target.
-sensor_msgs_generate_messages_cpp/fast:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build.make ndx_util/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build
-.PHONY : sensor_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-ndx_util/CMakeFiles/sensor_msgs_generate_messages_eus.dir/rule:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f CMakeFiles/Makefile2 ndx_util/CMakeFiles/sensor_msgs_generate_messages_eus.dir/rule
-.PHONY : ndx_util/CMakeFiles/sensor_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-sensor_msgs_generate_messages_eus: ndx_util/CMakeFiles/sensor_msgs_generate_messages_eus.dir/rule
-
-.PHONY : sensor_msgs_generate_messages_eus
-
-# fast build rule for target.
-sensor_msgs_generate_messages_eus/fast:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/sensor_msgs_generate_messages_eus.dir/build.make ndx_util/CMakeFiles/sensor_msgs_generate_messages_eus.dir/build
-.PHONY : sensor_msgs_generate_messages_eus/fast
+wrench_frame_changer_node/fast:
+	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/wrench_frame_changer_node.dir/build.make ndx_util/CMakeFiles/wrench_frame_changer_node.dir/build
+.PHONY : wrench_frame_changer_node/fast
 
 # Convenience name for target.
 ndx_util/CMakeFiles/marker_mesh_node.dir/rule:
@@ -213,64 +198,19 @@ marker_mesh_node/fast:
 .PHONY : marker_mesh_node/fast
 
 # Convenience name for target.
-ndx_util/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f CMakeFiles/Makefile2 ndx_util/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
-.PHONY : ndx_util/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
+ndx_util/CMakeFiles/tf_router.dir/rule:
+	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f CMakeFiles/Makefile2 ndx_util/CMakeFiles/tf_router.dir/rule
+.PHONY : ndx_util/CMakeFiles/tf_router.dir/rule
 
 # Convenience name for target.
-sensor_msgs_generate_messages_lisp: ndx_util/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/rule
+tf_router: ndx_util/CMakeFiles/tf_router.dir/rule
 
-.PHONY : sensor_msgs_generate_messages_lisp
+.PHONY : tf_router
 
 # fast build rule for target.
-sensor_msgs_generate_messages_lisp/fast:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build.make ndx_util/CMakeFiles/sensor_msgs_generate_messages_lisp.dir/build
-.PHONY : sensor_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-ndx_util/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f CMakeFiles/Makefile2 ndx_util/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/rule
-.PHONY : ndx_util/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-sensor_msgs_generate_messages_nodejs: ndx_util/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/rule
-
-.PHONY : sensor_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-sensor_msgs_generate_messages_nodejs/fast:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/build.make ndx_util/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir/build
-.PHONY : sensor_msgs_generate_messages_nodejs/fast
-
-# Convenience name for target.
-ndx_util/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f CMakeFiles/Makefile2 ndx_util/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
-.PHONY : ndx_util/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-sensor_msgs_generate_messages_py: ndx_util/CMakeFiles/sensor_msgs_generate_messages_py.dir/rule
-
-.PHONY : sensor_msgs_generate_messages_py
-
-# fast build rule for target.
-sensor_msgs_generate_messages_py/fast:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/sensor_msgs_generate_messages_py.dir/build.make ndx_util/CMakeFiles/sensor_msgs_generate_messages_py.dir/build
-.PHONY : sensor_msgs_generate_messages_py/fast
-
-# Convenience name for target.
-ndx_util/CMakeFiles/ndx_util.dir/rule:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f CMakeFiles/Makefile2 ndx_util/CMakeFiles/ndx_util.dir/rule
-.PHONY : ndx_util/CMakeFiles/ndx_util.dir/rule
-
-# Convenience name for target.
-ndx_util: ndx_util/CMakeFiles/ndx_util.dir/rule
-
-.PHONY : ndx_util
-
-# fast build rule for target.
-ndx_util/fast:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/ndx_util.dir/build.make ndx_util/CMakeFiles/ndx_util.dir/build
-.PHONY : ndx_util/fast
+tf_router/fast:
+	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/tf_router.dir/build.make ndx_util/CMakeFiles/tf_router.dir/build
+.PHONY : tf_router/fast
 
 # Convenience name for target.
 ndx_util/CMakeFiles/test_ndx_utils.dir/rule:
@@ -288,34 +228,19 @@ test_ndx_utils/fast:
 .PHONY : test_ndx_utils/fast
 
 # Convenience name for target.
-ndx_util/CMakeFiles/wrench_frame_changer_node.dir/rule:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f CMakeFiles/Makefile2 ndx_util/CMakeFiles/wrench_frame_changer_node.dir/rule
-.PHONY : ndx_util/CMakeFiles/wrench_frame_changer_node.dir/rule
+ndx_util/CMakeFiles/ndx_util.dir/rule:
+	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f CMakeFiles/Makefile2 ndx_util/CMakeFiles/ndx_util.dir/rule
+.PHONY : ndx_util/CMakeFiles/ndx_util.dir/rule
 
 # Convenience name for target.
-wrench_frame_changer_node: ndx_util/CMakeFiles/wrench_frame_changer_node.dir/rule
+ndx_util: ndx_util/CMakeFiles/ndx_util.dir/rule
 
-.PHONY : wrench_frame_changer_node
+.PHONY : ndx_util
 
 # fast build rule for target.
-wrench_frame_changer_node/fast:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/wrench_frame_changer_node.dir/build.make ndx_util/CMakeFiles/wrench_frame_changer_node.dir/build
-.PHONY : wrench_frame_changer_node/fast
-
-# Convenience name for target.
-ndx_util/CMakeFiles/tf_router.dir/rule:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f CMakeFiles/Makefile2 ndx_util/CMakeFiles/tf_router.dir/rule
-.PHONY : ndx_util/CMakeFiles/tf_router.dir/rule
-
-# Convenience name for target.
-tf_router: ndx_util/CMakeFiles/tf_router.dir/rule
-
-.PHONY : tf_router
-
-# fast build rule for target.
-tf_router/fast:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/tf_router.dir/build.make ndx_util/CMakeFiles/tf_router.dir/build
-.PHONY : tf_router/fast
+ndx_util/fast:
+	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/ndx_util.dir/build.make ndx_util/CMakeFiles/ndx_util.dir/build
+.PHONY : ndx_util/fast
 
 src/marker_mesh_node.o: src/marker_mesh_node.cpp.o
 
@@ -404,9 +329,9 @@ src/tf_util.o: src/tf_util.cpp.o
 
 # target to build an object file
 src/tf_util.cpp.o:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/ndx_util.dir/build.make ndx_util/CMakeFiles/ndx_util.dir/src/tf_util.cpp.o
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/test_ndx_utils.dir/build.make ndx_util/CMakeFiles/test_ndx_utils.dir/src/tf_util.cpp.o
 	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/tf_router.dir/build.make ndx_util/CMakeFiles/tf_router.dir/src/tf_util.cpp.o
+	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/test_ndx_utils.dir/build.make ndx_util/CMakeFiles/test_ndx_utils.dir/src/tf_util.cpp.o
+	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/ndx_util.dir/build.make ndx_util/CMakeFiles/ndx_util.dir/src/tf_util.cpp.o
 .PHONY : src/tf_util.cpp.o
 
 src/tf_util.i: src/tf_util.cpp.i
@@ -415,9 +340,9 @@ src/tf_util.i: src/tf_util.cpp.i
 
 # target to preprocess a source file
 src/tf_util.cpp.i:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/ndx_util.dir/build.make ndx_util/CMakeFiles/ndx_util.dir/src/tf_util.cpp.i
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/test_ndx_utils.dir/build.make ndx_util/CMakeFiles/test_ndx_utils.dir/src/tf_util.cpp.i
 	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/tf_router.dir/build.make ndx_util/CMakeFiles/tf_router.dir/src/tf_util.cpp.i
+	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/test_ndx_utils.dir/build.make ndx_util/CMakeFiles/test_ndx_utils.dir/src/tf_util.cpp.i
+	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/ndx_util.dir/build.make ndx_util/CMakeFiles/ndx_util.dir/src/tf_util.cpp.i
 .PHONY : src/tf_util.cpp.i
 
 src/tf_util.s: src/tf_util.cpp.s
@@ -426,9 +351,9 @@ src/tf_util.s: src/tf_util.cpp.s
 
 # target to generate assembly for a file
 src/tf_util.cpp.s:
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/ndx_util.dir/build.make ndx_util/CMakeFiles/ndx_util.dir/src/tf_util.cpp.s
-	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/test_ndx_utils.dir/build.make ndx_util/CMakeFiles/test_ndx_utils.dir/src/tf_util.cpp.s
 	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/tf_router.dir/build.make ndx_util/CMakeFiles/tf_router.dir/src/tf_util.cpp.s
+	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/test_ndx_utils.dir/build.make ndx_util/CMakeFiles/test_ndx_utils.dir/src/tf_util.cpp.s
+	cd /home/akoh751/autonomous_assembly_robot/rgmc/build && $(MAKE) -f ndx_util/CMakeFiles/ndx_util.dir/build.make ndx_util/CMakeFiles/ndx_util.dir/src/tf_util.cpp.s
 .PHONY : src/tf_util.cpp.s
 
 src/wrench_frame_changer_node.o: src/wrench_frame_changer_node.cpp.o
@@ -464,23 +389,18 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... install/local"
+	@echo "... install/strip"
 	@echo "... install"
 	@echo "... list_install_components"
-	@echo "... sensor_msgs_generate_messages_cpp"
-	@echo "... sensor_msgs_generate_messages_eus"
-	@echo "... marker_mesh_node"
-	@echo "... sensor_msgs_generate_messages_lisp"
-	@echo "... sensor_msgs_generate_messages_nodejs"
-	@echo "... sensor_msgs_generate_messages_py"
-	@echo "... ndx_util"
-	@echo "... install/strip"
-	@echo "... test_ndx_utils"
-	@echo "... wrench_frame_changer_node"
-	@echo "... tf_router"
-	@echo "... test"
-	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... edit_cache"
+	@echo "... test"
+	@echo "... install/local"
+	@echo "... wrench_frame_changer_node"
+	@echo "... marker_mesh_node"
+	@echo "... tf_router"
+	@echo "... test_ndx_utils"
+	@echo "... ndx_util"
 	@echo "... src/marker_mesh_node.o"
 	@echo "... src/marker_mesh_node.i"
 	@echo "... src/marker_mesh_node.s"
