@@ -1,8 +1,0 @@
-prefix=/home/akoh751/autonomous_assembly_robot/rgmc/install
-
-Name: rgmc_task_execution
-Description: Description of rgmc_task_execution
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
