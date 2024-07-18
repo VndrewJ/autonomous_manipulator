@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="collision_objects" type="add_collision_objects.py" name="collision_objects_add" output="screen"/>
+  <node pkg="joint_state_sub" type="joint_state_subscriber.py" name="joint_state_sub" output="screen"/>
+</launch>

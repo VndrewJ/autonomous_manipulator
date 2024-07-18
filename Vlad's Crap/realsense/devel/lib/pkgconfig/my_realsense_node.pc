@@ -1,8 +1,0 @@
-prefix=/home/mechp4p/mechp4p/realsense/devel
-
-Name: my_realsense_node
-Description: Description of my_realsense_node
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
