@@ -22,7 +22,7 @@ class ImageSubscriber:
         cv_image = self.bridge.imgmsg_to_cv2(msg, "16UC1")
         normalized_depth_image = cv2.normalize(cv_image, None, 0, 255, cv2.NORM_MINMAX)
         normalized_depth_image = cv2.convertScaleAbs(normalized_depth_image)
-        self.image_queue.put(('depth', normalized_depth_image))
+        self.image_queue.put(('depth', cv_image))
 
 
 def display_images(image_queue):

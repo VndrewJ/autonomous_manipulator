@@ -1,0 +1,3 @@
+[submodule "rgmc/rgmc/src/realsense_gazebo_plugin"]
+	path = rgmc/rgmc/src/realsense_gazebo_plugin
+	url = https://github.com/issaiass/realsense_gazebo_plugin.git
