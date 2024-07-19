@@ -27,7 +27,6 @@
     
 
     <!-- Load the controllers-->
-
     <rosparam command="load" file="$(find pose_estimation)/config/ur5e_joystick_controller.yaml"/>
 
 
@@ -58,8 +57,11 @@
     </include>
 
     <include file= "$(find camera_moveit_config)/launch/moveit_rviz.launch" >
-        <arg name="rviz_config" value="$(find camera_moveit_config)/launch/moveit.rviz" />
+        <arg name="rviz_config" value="$(find camera_moveit_config)/launch/moveit.rviz" /> 
     </include>
 
-    
+    <arg name="gui" default="True" />
+    <param name="use_gui" value="$(arg gui)" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find camera_moveit_config)/launch/moveit_camera.rviz" required="true" />
+
 </launch>

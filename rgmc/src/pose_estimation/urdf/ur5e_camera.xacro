@@ -377,7 +377,7 @@
     </joint>
 
     <!-- Define d435i sensor -->  
-    <xacro:sensor_d435 name="camera" topics_ns="camera" parent="tool0">
+    <xacro:sensor_d435 name="camera" topics_ns="camera" parent="tool0" publish_pointcloud="true">
         <origin xyz="0 -0.035 -0.03" rpy="0 -1.5707 1.5707"/>
     </xacro:sensor_d435>
 
