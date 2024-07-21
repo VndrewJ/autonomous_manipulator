@@ -1,8 +1,0 @@
-prefix=/home/akoh751/autonomous_assembly_robot/rgmc/install
-
-Name: rgmc_moveit_config
-Description: Description of rgmc_moveit_config
-Version: 0.3.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
