@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="collision_objects" type="collision_objects.py" name="collision_objects_pub" output="screen"/>
+  <node pkg="forward_kinematics" type="forward_kinematics.py" name="forward_kinematics_sub" output="screen"/>
+</launch>
