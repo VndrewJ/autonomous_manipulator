@@ -50,7 +50,7 @@ def joint_states_callback(data):
     alpha = mt.atan2(DP5[1][0]/mt.cos(beta),DP5[0][0]/mt.cos(beta))
     gamma = mt.atan2(DP5[2][1]/mt.cos(beta), DP5[2][2]/mt.cos(beta))
 
-    rospy.loginfo("\nX:      %s, \nY:      %s, \nZ:      %s, \nAlpha:  %s, \nBeta:   %s, \nGamma:  %s", DP5[0][3], DP5[1][3], DP5[2][3], mt.degrees(alpha), mt.degrees(beta), mt.degrees(gamma))
+    rospy.loginfo("\nX:      %s, \nY:      %s, \nZ:      %s, \nAlpha:  %s, \nBeta:   %s, \nGamma:  %s", DP5[0][3], DP5[1][3], DP5[2][3]+0.1, mt.degrees(alpha), mt.degrees(beta), mt.degrees(gamma))
 #     rospy.loginfo("\n%s\n%s\n%s\n%s\n%s\n%s", mt.degrees(pos[0]), mt.degrees(pos[1]), mt.degrees(pos[2]), mt.degrees(pos[3]), mt.degrees(pos[4]), mt.degrees(pos[5]))
     
 
