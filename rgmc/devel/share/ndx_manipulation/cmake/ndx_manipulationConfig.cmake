@@ -67,14 +67,14 @@ set(ndx_manipulation_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(ndx_manipulation_SOURCE_PREFIX /home/akoh751/autonomous_assembly_robot/rgmc/src/ndx_manipulation)
-  set(ndx_manipulation_DEVEL_PREFIX /home/akoh751/autonomous_assembly_robot/rgmc/devel)
+  set(ndx_manipulation_SOURCE_PREFIX /home/mechp4p/mechp4p/akoh751/autonomous_manipulator/rgmc/src/ndx_manipulation)
+  set(ndx_manipulation_DEVEL_PREFIX /home/mechp4p/mechp4p/akoh751/autonomous_manipulator/rgmc/devel)
   set(ndx_manipulation_INSTALL_PREFIX "")
   set(ndx_manipulation_PREFIX ${ndx_manipulation_DEVEL_PREFIX})
 else()
   set(ndx_manipulation_SOURCE_PREFIX "")
   set(ndx_manipulation_DEVEL_PREFIX "")
-  set(ndx_manipulation_INSTALL_PREFIX /home/akoh751/autonomous_assembly_robot/rgmc/install)
+  set(ndx_manipulation_INSTALL_PREFIX /home/mechp4p/mechp4p/akoh751/autonomous_manipulator/rgmc/install)
   set(ndx_manipulation_PREFIX ${ndx_manipulation_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(ndx_manipulation_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/akoh751/autonomous_assembly_robot/rgmc/devel/include " STREQUAL " ")
+if(NOT "/home/mechp4p/mechp4p/akoh751/autonomous_manipulator/rgmc/devel/include " STREQUAL " ")
   set(ndx_manipulation_INCLUDE_DIRS "")
-  set(_include_dirs "/home/akoh751/autonomous_assembly_robot/rgmc/devel/include")
+  set(_include_dirs "/home/mechp4p/mechp4p/akoh751/autonomous_manipulator/rgmc/devel/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -110,7 +110,7 @@ if(NOT "/home/akoh751/autonomous_assembly_robot/rgmc/devel/include " STREQUAL " 
         message(FATAL_ERROR "Project 'ndx_manipulation' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'ndx_manipulation' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/akoh751/autonomous_assembly_robot/rgmc/src/ndx_manipulation/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'ndx_manipulation' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/mechp4p/mechp4p/akoh751/autonomous_manipulator/rgmc/src/ndx_manipulation/${idir}'.  ${_report}")
     endif()
     _list_append_unique(ndx_manipulation_INCLUDE_DIRS ${include})
   endforeach()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/akoh751/autonomous_assembly_robot/rgmc/devel/lib;/home/akoh751/autonomous_assembly_robot/rgmc/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/mechp4p/mechp4p/akoh751/autonomous_manipulator/rgmc/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

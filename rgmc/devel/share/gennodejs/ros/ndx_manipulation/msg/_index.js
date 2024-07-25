@@ -1,48 +1,48 @@
 
 "use strict";
 
+let GripperCommandAction = require('./GripperCommandAction.js');
+let RotaryGripperCommandFeedback = require('./RotaryGripperCommandFeedback.js');
+let RotaryGripperCommandAction = require('./RotaryGripperCommandAction.js');
+let TFGCommandGoal = require('./TFGCommandGoal.js');
+let RotaryGripperCommandResult = require('./RotaryGripperCommandResult.js');
+let RotaryGripperCommandActionGoal = require('./RotaryGripperCommandActionGoal.js');
 let TFGCommandFeedback = require('./TFGCommandFeedback.js');
+let TFGCommandActionFeedback = require('./TFGCommandActionFeedback.js');
+let TFGCommandResult = require('./TFGCommandResult.js');
 let RotaryGripperCommandGoal = require('./RotaryGripperCommandGoal.js');
-let GripperCommandActionGoal = require('./GripperCommandActionGoal.js');
-let GripperCommandActionResult = require('./GripperCommandActionResult.js');
-let RotaryGripperCommandActionFeedback = require('./RotaryGripperCommandActionFeedback.js');
+let RotaryGripperCommandActionResult = require('./RotaryGripperCommandActionResult.js');
 let GripperCommandGoal = require('./GripperCommandGoal.js');
 let TFGCommandActionResult = require('./TFGCommandActionResult.js');
-let TFGCommandActionFeedback = require('./TFGCommandActionFeedback.js');
-let GripperCommandFeedback = require('./GripperCommandFeedback.js');
-let TFGCommandAction = require('./TFGCommandAction.js');
-let RotaryGripperCommandActionGoal = require('./RotaryGripperCommandActionGoal.js');
-let TFGCommandActionGoal = require('./TFGCommandActionGoal.js');
-let RotaryGripperCommandFeedback = require('./RotaryGripperCommandFeedback.js');
-let GripperCommandAction = require('./GripperCommandAction.js');
-let TFGCommandResult = require('./TFGCommandResult.js');
-let RotaryGripperCommandActionResult = require('./RotaryGripperCommandActionResult.js');
-let GripperCommandActionFeedback = require('./GripperCommandActionFeedback.js');
-let TFGCommandGoal = require('./TFGCommandGoal.js');
-let RotaryGripperCommandAction = require('./RotaryGripperCommandAction.js');
 let GripperCommandResult = require('./GripperCommandResult.js');
-let RotaryGripperCommandResult = require('./RotaryGripperCommandResult.js');
+let RotaryGripperCommandActionFeedback = require('./RotaryGripperCommandActionFeedback.js');
+let TFGCommandAction = require('./TFGCommandAction.js');
+let GripperCommandFeedback = require('./GripperCommandFeedback.js');
+let GripperCommandActionFeedback = require('./GripperCommandActionFeedback.js');
+let GripperCommandActionResult = require('./GripperCommandActionResult.js');
+let GripperCommandActionGoal = require('./GripperCommandActionGoal.js');
+let TFGCommandActionGoal = require('./TFGCommandActionGoal.js');
 
 module.exports = {
+  GripperCommandAction: GripperCommandAction,
+  RotaryGripperCommandFeedback: RotaryGripperCommandFeedback,
+  RotaryGripperCommandAction: RotaryGripperCommandAction,
+  TFGCommandGoal: TFGCommandGoal,
+  RotaryGripperCommandResult: RotaryGripperCommandResult,
+  RotaryGripperCommandActionGoal: RotaryGripperCommandActionGoal,
   TFGCommandFeedback: TFGCommandFeedback,
+  TFGCommandActionFeedback: TFGCommandActionFeedback,
+  TFGCommandResult: TFGCommandResult,
   RotaryGripperCommandGoal: RotaryGripperCommandGoal,
-  GripperCommandActionGoal: GripperCommandActionGoal,
-  GripperCommandActionResult: GripperCommandActionResult,
-  RotaryGripperCommandActionFeedback: RotaryGripperCommandActionFeedback,
+  RotaryGripperCommandActionResult: RotaryGripperCommandActionResult,
   GripperCommandGoal: GripperCommandGoal,
   TFGCommandActionResult: TFGCommandActionResult,
-  TFGCommandActionFeedback: TFGCommandActionFeedback,
-  GripperCommandFeedback: GripperCommandFeedback,
-  TFGCommandAction: TFGCommandAction,
-  RotaryGripperCommandActionGoal: RotaryGripperCommandActionGoal,
-  TFGCommandActionGoal: TFGCommandActionGoal,
-  RotaryGripperCommandFeedback: RotaryGripperCommandFeedback,
-  GripperCommandAction: GripperCommandAction,
-  TFGCommandResult: TFGCommandResult,
-  RotaryGripperCommandActionResult: RotaryGripperCommandActionResult,
-  GripperCommandActionFeedback: GripperCommandActionFeedback,
-  TFGCommandGoal: TFGCommandGoal,
-  RotaryGripperCommandAction: RotaryGripperCommandAction,
   GripperCommandResult: GripperCommandResult,
-  RotaryGripperCommandResult: RotaryGripperCommandResult,
+  RotaryGripperCommandActionFeedback: RotaryGripperCommandActionFeedback,
+  TFGCommandAction: TFGCommandAction,
+  GripperCommandFeedback: GripperCommandFeedback,
+  GripperCommandActionFeedback: GripperCommandActionFeedback,
+  GripperCommandActionResult: GripperCommandActionResult,
+  GripperCommandActionGoal: GripperCommandActionGoal,
+  TFGCommandActionGoal: TFGCommandActionGoal,
 };

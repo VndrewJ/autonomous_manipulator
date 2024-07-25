@@ -1,4 +1,4 @@
-prefix=/home/akoh751/autonomous_assembly_robot/rgmc/devel
+prefix=/home/mechp4p/mechp4p/akoh751/autonomous_manipulator/rgmc/devel
 
 Name: camera_moveit_config
 Description: Description of camera_moveit_config
