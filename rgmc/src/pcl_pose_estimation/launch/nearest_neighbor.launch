@@ -1,0 +1,9 @@
+<launch>
+  <!-- Define the node -->
+  <node name="nearest_neighbor_node" pkg="pcl_pose_estimation" type="nearest_neighbor_node" output="screen"
+        args="--k 16 --thresh 50.0 
+              $(find pcl_pose_estimation)/data/100.919.00/1258146320333_cluster_0_nxyz_vfh.pcd 
+              $(find pcl_pose_estimation)/data/kdtree.idx 
+              $(find pcl_pose_estimation)/data/training_data.h5 
+              $(find pcl_pose_estimation)/data/training_data.list"/>
+</launch>

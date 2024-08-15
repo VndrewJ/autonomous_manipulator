@@ -1,0 +1,3 @@
+<launch>
+  <node name="capture_pcd_node" pkg="realsense_capture" type="capture_pcd_node" output="screen"/>
+</launch>

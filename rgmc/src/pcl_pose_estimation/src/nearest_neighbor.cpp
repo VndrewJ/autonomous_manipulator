@@ -12,6 +12,8 @@
 #include <flann/flann.h>
 #include <flann/io/hdf5.h>
 
+#include <ros/ros.h>
+
 #include <boost/algorithm/string/replace.hpp> // for replace_last
 typedef std::pair<std::string, std::vector<float> > vfh_model;
 
@@ -112,6 +114,10 @@ loadFileList (std::vector<vfh_model> &models, const std::string &filename)
 int
 main (int argc, char** argv)
 {
+
+  ros::init(argc, argv, "nearest_neighbor_node");
+  ros::NodeHandle nh;
+
   int k = 6;
 
   double thresh = std::numeric_limits<double>::max();     // No threshold, disabled by default

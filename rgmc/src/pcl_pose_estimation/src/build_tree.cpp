@@ -8,6 +8,8 @@
 #include <flann/io/hdf5.h>
 #include <fstream>
 
+#include <ros/ros.h>
+
 
 typedef std::pair<std::string, std::vector<float> > vfh_model;
 
@@ -91,9 +93,12 @@ loadFeatureModels (const pcl_fs::path &base_dir, const std::string &extension,
 int
 main (int argc, char** argv)
 {
-  if (argc < 2)
+  ros::init(argc, argv, "build_tree_node");
+  ros::NodeHandle nh;
+
+  if (argc < 1)
   {
-    PCL_ERROR ("Need at least two parameters! Syntax is: %s [model_directory] [options]\n", argv[0]);
+    PCL_ERROR ("Need at least one parameter! Syntax is: %s [model_directory] \n", argv[0]);
     return (-1);
   }
 
