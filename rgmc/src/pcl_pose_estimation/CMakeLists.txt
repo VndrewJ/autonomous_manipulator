@@ -16,6 +16,8 @@ find_package(FLANN REQUIRED)
 # Find RealSense2 package
 find_package(realsense2 REQUIRED)
 
+find_package(Boost REQUIRED COMPONENTS filesystem)
+
 catkin_package(
   CATKIN_DEPENDS roscpp pcl_ros pcl_conversions std_msgs
 )
@@ -36,7 +38,7 @@ target_link_libraries(nearest_neighbor_node ${catkin_LIBRARIES} ${PCL_LIBRARIES}
 
 # Add executable for capture_pcd
 add_executable(capture_pcd_node src/capture_pcd.cpp)
-target_link_libraries(capture_pcd_node ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${Boost_LIBRARIES} FLANN::FLANN ${HDF5_LIBRARIES} ${realsense2_LIBRARY})
+target_link_libraries(capture_pcd_node ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${Boost_LIBRARIES} FLANN::FLANN ${HDF5_LIBRARIES} ${realsense2_LIBRARY} ${Boost_LIBRARIES})
 
 # Install targets
 install(TARGETS build_tree_node nearest_neighbor_node capture_pcd_node
