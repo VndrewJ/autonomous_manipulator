@@ -9,8 +9,7 @@
 #include <fstream>
 
 #include <ros/ros.h>
-
-
+#include <libgen.h>  // For dirname()
 
 typedef std::pair<std::string, std::vector<float> > vfh_model;
 
@@ -18,8 +17,7 @@ typedef std::pair<std::string, std::vector<float> > vfh_model;
   * \param path the input file name
   * \param vfh the resultant VFH model
   */
-bool
-loadHist (const pcl_fs::path &path, vfh_model &vfh)
+bool loadHist (const pcl_fs::path &path, vfh_model &vfh)
 {
   int vfh_idx;
   // Load the file as a PCD
@@ -66,8 +64,7 @@ loadHist (const pcl_fs::path &path, vfh_model &vfh)
   * \param extension the file extension containing the VFH features
   * \param models the resultant vector of histogram models
   */
-void
-loadFeatureModels (const pcl_fs::path &base_dir, const std::string &extension, 
+void loadFeatureModels (const pcl_fs::path &base_dir, const std::string &extension, 
                    std::vector<vfh_model> &models)
 {
   if (!pcl_fs::exists (base_dir) && !pcl_fs::is_directory (base_dir))
@@ -91,30 +88,39 @@ loadFeatureModels (const pcl_fs::path &base_dir, const std::string &extension,
   }
 }
 
-int
-main (int argc, char** argv)
+
+std::string get_dir()
 {
-  // Allocate a buffer to store the current working directory
-  char buffer[PATH_MAX];
-  std::string current_dir(buffer);
+  // The __FILE__ macro gives the full path of the current source file at compile time
+  std::string file_path = __FILE__;
 
-  // Get the current working directory
-  if (getcwd(buffer, sizeof(buffer)) != NULL) {
+  // Allocate a buffer to store the directory path
+  char dir_path[file_path.size() + 1];
+  strcpy(dir_path, file_path.c_str());
 
-      // Check if the current directory contains ".ros" and replace it
-      std::string to_replace = ".ros";
-      std::string replacement = "autonomous_manipulator/rgmc/src/pcl_pose_estimation/data/";
+  // Extract the directory name
+  std::string current_dir = dirname(dir_path);
 
-      size_t pos = current_dir.find(to_replace);
-      if (pos != std::string::npos) {
-          // Replace ".ros" with the desired directory
-          current_dir.replace(pos, to_replace.length(), replacement);
-      }
+  // Find the position of "/src" in the directory path
+  size_t pos = current_dir.rfind("/src");
 
-      // Print the modified directory
-      std::cout << "Modified working directory: " << current_dir + "kdtree.idx" << std::endl;
-  } else {
-      std::cerr << "Error: Unable to get the current working directory" << std::endl;
+  // If "/src" is found, remove everything from "/src" onwards
+  if (pos != std::string::npos) {
+      current_dir = current_dir.substr(0, pos);  // Trim the path to remove "/src" and beyond
+      current_dir = current_dir + "/data/";
+  }
+
+  return current_dir;
+}
+
+
+int main (int argc, char** argv)
+{
+  std::string current_dir = get_dir();
+
+  if (current_dir.empty()) {
+    std::cerr << "Error: Unable to get the current working directory" << std::endl;
+    return (-1);
   }
 
   ros::init(argc, argv, "build_tree_node");
