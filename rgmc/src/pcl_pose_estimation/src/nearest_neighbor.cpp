@@ -159,6 +159,8 @@ main (int argc, char** argv)
   flann::Matrix<float> k_distances;
   flann::Matrix<float> data;
   // Check if the data has already been saved to disk
+
+
   if (!pcl_fs::exists (training_data_h5_file_name) || !pcl_fs::exists (training_data_list_file_name))
   {
     pcl::console::print_error ("Could not find training data models files %s and %s!\n", 
@@ -173,18 +175,25 @@ main (int argc, char** argv)
         (int)data.rows, training_data_h5_file_name.c_str (), training_data_list_file_name.c_str ());
   }
 
+  printf("\n hello \n");
   // Check if the tree index has already been saved to disk
   if (!pcl_fs::exists (kdtree_idx_file_name))
   {
+    printf("\n if \n");
     pcl::console::print_error ("Could not find kd-tree index in file %s!", kdtree_idx_file_name.c_str ());
     return (-1);
   }
   else
   {
-    flann::Index<flann::ChiSquareDistance<float> > index (data, flann::SavedIndexParams ("kdtree.idx"));
+    printf("\n else \n");
+    flann::Index<flann::ChiSquareDistance<float> > index (data, flann::SavedIndexParams (kdtree_idx_file_name));
+    printf("\n saved index parameters \n");
     index.buildIndex ();
+    printf("\n build index \n");
     nearestKSearch (index, histogram, k, k_indices, k_distances);
   }
+
+  printf("\n chicken \n");
 
   // Output the results on screen
   pcl::console::print_highlight ("The closest %d neighbors for %s are:\n", k, argv[pcd_indices[0]]);
