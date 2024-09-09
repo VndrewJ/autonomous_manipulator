@@ -26,7 +26,7 @@ int main() {
     }
 
     // Define file paths and names
-    std::string data_dir = "/home/mechp4p/autonomous_manipulator/rgmc/src/pcl_pose_estimation/data";  // Replace with actual directory
+    std::string data_dir = "autonomous_manipulator/rgmc/src/pcl_pose_estimation/data";  // Replace with actual directory
     std::string training_data_hdf5_file_name = "src/pcl_pose_estimation/data/training_data.h5";
 
     // Create the directory if necessary (using your function)

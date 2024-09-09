@@ -11,6 +11,7 @@
 #include <ros/ros.h>
 
 
+
 typedef std::pair<std::string, std::vector<float> > vfh_model;
 
 /** \brief Loads an n-D histogram file as a VFH signature
@@ -93,6 +94,29 @@ loadFeatureModels (const pcl_fs::path &base_dir, const std::string &extension,
 int
 main (int argc, char** argv)
 {
+  // Allocate a buffer to store the current working directory
+  char buffer[PATH_MAX];
+  std::string current_dir(buffer);
+
+  // Get the current working directory
+  if (getcwd(buffer, sizeof(buffer)) != NULL) {
+
+      // Check if the current directory contains ".ros" and replace it
+      std::string to_replace = ".ros";
+      std::string replacement = "autonomous_manipulator/rgmc/src/pcl_pose_estimation/data/";
+
+      size_t pos = current_dir.find(to_replace);
+      if (pos != std::string::npos) {
+          // Replace ".ros" with the desired directory
+          current_dir.replace(pos, to_replace.length(), replacement);
+      }
+
+      // Print the modified directory
+      std::cout << "Modified working directory: " << current_dir + "kdtree.idx" << std::endl;
+  } else {
+      std::cerr << "Error: Unable to get the current working directory" << std::endl;
+  }
+
   ros::init(argc, argv, "build_tree_node");
   ros::NodeHandle nh;
 
@@ -105,9 +129,9 @@ main (int argc, char** argv)
   std::string extension (".pcd");
   transform (extension.begin (), extension.end (), extension.begin (), (int(*)(int))tolower);
 
-  std::string kdtree_idx_file_name = "/home/mechp4p/autonomous_manipulator/rgmc/src/pcl_pose_estimation/data/kdtree.idx";
-  std::string training_data_h5_file_name = "/home/mechp4p/autonomous_manipulator/rgmc/src/pcl_pose_estimation/data/training_data.h5";
-  std::string training_data_list_file_name = "/home/mechp4p/autonomous_manipulator/rgmc/src/pcl_pose_estimation/data/training_data.list";
+  std::string kdtree_idx_file_name = current_dir + "kdtree.idx";
+  std::string training_data_h5_file_name = current_dir + "training_data.h5";
+  std::string training_data_list_file_name = current_dir + "training_data.list";
 
   std::vector<vfh_model> models;
 
