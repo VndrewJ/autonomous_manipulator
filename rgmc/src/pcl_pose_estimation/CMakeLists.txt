@@ -29,9 +29,13 @@ include_directories(
   ${realsense2_INCLUDE_DIRS}
 )
 
+add_executable(test_node src/test.cpp)
+target_link_libraries(test_node ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${FLANN_LIBRARIES} ${HDF5_LIBRARIES})
+
 # Add your executables
 add_executable(build_tree_node src/build_tree.cpp)
 target_link_libraries(build_tree_node ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${Boost_LIBRARIES} FLANN::FLANN ${HDF5_LIBRARIES})
+
 
 add_executable(nearest_neighbor_node src/nearest_neighbor.cpp)
 target_link_libraries(nearest_neighbor_node ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${Boost_LIBRARIES} FLANN::FLANN ${HDF5_LIBRARIES})

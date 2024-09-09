@@ -150,16 +150,16 @@ main (int argc, char** argv)
   pcl::console::parse_argument (argc, argv, "-k", k);
   pcl::console::print_highlight ("Using "); pcl::console::print_value ("%d", k); pcl::console::print_info (" nearest neighbors.\n");
 
-  std::string kdtree_idx_file_name = "kdtree.idx";
-  std::string training_data_h5_file_name = "training_data.h5";
-  std::string training_data_list_file_name = "training_data.list";
+  std::string kdtree_idx_file_name = "/home/mechp4p/autonomous_manipulator/rgmc/src/pcl_pose_estimation/data/kdtree.idx";
+  std::string training_data_h5_file_name = "/home/mechp4p/autonomous_manipulator/rgmc/src/pcl_pose_estimation/data/training_data.h5";
+  std::string training_data_list_file_name = "/home/mechp4p/autonomous_manipulator/rgmc/src/pcl_pose_estimation/data/training_data.list";
 
   std::vector<vfh_model> models;
   flann::Matrix<int> k_indices;
   flann::Matrix<float> k_distances;
   flann::Matrix<float> data;
   // Check if the data has already been saved to disk
-  if (!pcl_fs::exists ("training_data.h5") || !pcl_fs::exists ("training_data.list"))
+  if (!pcl_fs::exists (training_data_h5_file_name) || !pcl_fs::exists (training_data_list_file_name))
   {
     pcl::console::print_error ("Could not find training data models files %s and %s!\n", 
         training_data_h5_file_name.c_str (), training_data_list_file_name.c_str ());

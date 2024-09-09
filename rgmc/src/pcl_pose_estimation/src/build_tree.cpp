@@ -105,9 +105,9 @@ main (int argc, char** argv)
   std::string extension (".pcd");
   transform (extension.begin (), extension.end (), extension.begin (), (int(*)(int))tolower);
 
-  std::string kdtree_idx_file_name = "kdtree.idx";
-  std::string training_data_h5_file_name = "training_data.h5";
-  std::string training_data_list_file_name = "training_data.list";
+  std::string kdtree_idx_file_name = "/home/mechp4p/autonomous_manipulator/rgmc/src/pcl_pose_estimation/data/kdtree.idx";
+  std::string training_data_h5_file_name = "/home/mechp4p/autonomous_manipulator/rgmc/src/pcl_pose_estimation/data/training_data.h5";
+  std::string training_data_list_file_name = "/home/mechp4p/autonomous_manipulator/rgmc/src/pcl_pose_estimation/data/training_data.list";
 
   std::vector<vfh_model> models;
 
@@ -119,9 +119,12 @@ main (int argc, char** argv)
   // Convert data into FLANN format
   flann::Matrix<float> data (new float[models.size () * models[0].second.size ()], models.size (), models[0].second.size ());
 
-  for (std::size_t i = 0; i < data.rows; ++i)
-    for (std::size_t j = 0; j < data.cols; ++j)
-      data[i][j] = models[i].second[j];
+  for (std::size_t i = 0; i < data.rows; ++i) {
+      for (std::size_t j = 0; j < data.cols; ++j) {
+          data[i][j] = models[i].second[j];
+      }
+  }
+
 
   // Save data to disk (list of models)
   flann::save_to_file (data, training_data_h5_file_name, "training_data");
