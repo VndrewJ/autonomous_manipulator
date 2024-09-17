@@ -21,12 +21,10 @@ public:
     {
         // Subscribe to the RealSense point cloud topic
         pointcloud_sub_ = nh_.subscribe("/camera/depth/color/points", 1, &AlignmentNode::pointCloudCallback, this);
-
         // Initialize the publisher for the aligned object
         pub_ = nh_.advertise<sensor_msgs::PointCloud2>("aligned_object_cloud", 1);
-
         // Load the object PCD file
-        pcl::io::loadPCDFile<pcl::PointXYZ>("/home/mechp4p/Desktop/Catkin/src/real_sense_alignment_pcl/data/chef.pcd", *object_cloud_);
+        pcl::io::loadPCDFile<pcl::PointXYZ>("/home/mechp4p/autonomous_manipulator/rgmc/src/real_sense_alignment_pcl/data/chef.pcd", *object_cloud_);
     }
 
     void pointCloudCallback(const sensor_msgs::PointCloud2ConstPtr &cloud_msg)

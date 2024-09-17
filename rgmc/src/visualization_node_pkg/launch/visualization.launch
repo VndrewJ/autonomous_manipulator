@@ -14,6 +14,7 @@
 
   <!-- Launch the visualization node -->
   <node pkg="visualization_node_pkg" type="visualization_node" name="visualization_node" output="screen"/>
+
 </launch>
 
 
