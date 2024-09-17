@@ -1,0 +1,2 @@
+Model_ws/src/collision_detector:Model_ws/src/get_angles:Model_ws/src/shape_spawner:camera_moveit_config:camera_sim_config:collision_objects:forward_kinematics:ndx_manipulation:ndx_util:pcl_object_recognition:pcl_pose_estimation:pcl_realsense:pcl_test_pose_estimation:pose_estimation:rgmc_bringup:rgmc_description:rgmc_manipulation:rgmc_moveit_config:rgmc_task_execution:rgmc_utils
+-G Unix Makefiles -DCATKIN_DEVEL_PREFIX=/home/mechp4p/autonomous_manipulator/rgmc/devel_isolated -DCMAKE_INSTALL_PREFIX=/home/mechp4p/autonomous_manipulator/rgmc/install_isolated

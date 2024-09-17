@@ -1,0 +1,8 @@
+prefix=/home/mechp4p/autonomous_manipulator/rgmc/devel_isolated/pcl_pose_estimation
+
+Name: pcl_pose_estimation
+Description: Description of pcl_pose_estimation
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: roscpp pcl_ros pcl_conversions std_msgs

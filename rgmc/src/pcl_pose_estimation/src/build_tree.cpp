@@ -9,6 +9,7 @@
 #include <fstream>
 
 #include <ros/ros.h>
+
 #include <libgen.h>  // For dirname()
 
 typedef std::pair<std::string, std::vector<float> > vfh_model;
