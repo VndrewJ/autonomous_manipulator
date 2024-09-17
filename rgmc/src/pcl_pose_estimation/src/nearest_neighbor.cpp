@@ -203,7 +203,7 @@ int main(int argc, char** argv) {
         pcl::compute3DCentroid(cloud_xyz, centroid);
 
         // Output the XYZ position of the object
-        pcl::console::print_info("Object position (XYZ) relative to the camera: [%f, %f, %f]\n", centroid[0], centroid[1], centroid[2]);
+        pcl::console::print_info("Object position (XYZ) relative to the camera: [%f, %f, %f] [m]\n", centroid[0], centroid[1], centroid[2]);
 
         // Visualize the cloud and pose
         pcl::visualization::PCLVisualizer p(argc, argv, "VFH Cluster Classifier");
