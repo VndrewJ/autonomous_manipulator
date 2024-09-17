@@ -1,0 +1,12 @@
+float64 grasp           # Gripper open or close
+float64 finger_angle    # Angle between finger 2 and finger 3
+bool is_deg             # Specify if Angle is in degrees
+float64 max_effort      # Max motor current
+float64 velocity        # Motor velocity
+---
+float64 effort          # The current effort exerted (motor current)
+bool stalled            # True iff the gripper is exerting max effort and not moving
+bool reached_goal       # True iff the gripper position has reached the commanded setpoint
+---
+bool stalled            # True iff the gripper is exerting max effort and not moving
+bool reached_goal       # True iff the gripper position has reached the commanded setpoint
