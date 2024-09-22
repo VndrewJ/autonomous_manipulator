@@ -137,7 +137,7 @@ int main (int argc, char** argv)
   transform (extension.begin (), extension.end (), extension.begin (), (int(*)(int))tolower);
 
   std::string kdtree_idx_file_name = current_dir + "kdtree.idx";
-  std::string training_data_h5_file_name = current_dir + "training_data.h5";
+  std::string training_data_h5_file_name = current_dir + "training_data.hdf5";
   std::string training_data_list_file_name = current_dir + "training_data.list";
 
   std::vector<vfh_model> models;
