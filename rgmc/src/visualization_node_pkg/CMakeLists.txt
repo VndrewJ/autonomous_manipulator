@@ -28,14 +28,14 @@ include_directories(
   ${realsense2_INCLUDE_DIRS} 
 )
 
-add_executable(visualization_node_pkg src/visualization_node.cpp)
+add_executable(visualization_node src/visualization_node.cpp)
 
-target_link_libraries(visualization_node_pkg 
+target_link_libraries(visualization_node 
   ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
   ${realsense2_LIBRARY}  # Link the RealSense library
 )
 
-install(TARGETS visualization_node_pkg
+install(TARGETS visualization_node
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

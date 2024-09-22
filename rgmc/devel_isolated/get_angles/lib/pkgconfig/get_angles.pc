@@ -1,8 +1,0 @@
-prefix=/home/mechp4p/autonomous_manipulator/rgmc/devel_isolated/get_angles
-
-Name: get_angles
-Description: Description of get_angles
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

@@ -1,8 +1,0 @@
-prefix=/home/mechp4p/autonomous_manipulator/rgmc/devel_isolated/pcl_object_recognition
-
-Name: pcl_object_recognition
-Description: Description of pcl_object_recognition
-Version: 0.0.1
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: roscpp pcl_ros pcl_conversions std_msgs

@@ -2,12 +2,11 @@
 <launch>
   <!-- Launch RealSense Camera with pointcloud filter -->
   <include file="$(find realsense2_camera)/launch/rs_camera.launch">
-  <arg name="filters" value="pointcloud"/>
-  <param name="enable_depth" value="true"/>
-  <param name="enable_color" value="true"/>
-  <param name="enable_pointcloud" value="true"/>
+    <arg name="filters" value="pointcloud"/>
+    <arg name="enable_depth" value="true"/>
+    <arg name="enable_color" value="true"/>
+    <arg name="enable_pointcloud" value="true"/>
   </include>
-
 
   <!-- Launch the alignment node -->
   <node pkg="real_sense_alignment_pcl" type="real_sense_alignment_node" name="real_sense_alignment_node" output="screen"/>
@@ -15,6 +14,3 @@
   <!-- Launch the visualization node -->
   <node pkg="visualization_node_pkg" type="visualization_node" name="visualization_node" output="screen"/>
 </launch>
-
-
-

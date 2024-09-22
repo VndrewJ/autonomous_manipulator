@@ -1,8 +1,0 @@
-prefix=/home/mechp4p/autonomous_manipulator/rgmc/devel_isolated/camera_moveit_config
-
-Name: camera_moveit_config
-Description: Description of camera_moveit_config
-Version: 0.3.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

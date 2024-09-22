@@ -1,8 +1,0 @@
-prefix=/home/mechp4p/autonomous_manipulator/rgmc/devel_isolated/ndx_util
-
-Name: ndx_util
-Description: Description of ndx_util
-Version: 0.0.0
-Cflags: -I/usr/include/eigen3
-Libs: -L${prefix}/lib 
-Requires: roscpp rospy tf2 tf2_ros std_msgs message_runtime

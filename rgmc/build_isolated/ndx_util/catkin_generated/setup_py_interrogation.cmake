@@ -1,7 +1,0 @@
-set(ndx_util_SETUP_PY_SETUP_MODULE "distutils.core")
-set(ndx_util_SETUP_PY_VERSION "0.0.0")
-set(ndx_util_SETUP_PY_SCRIPTS "")
-set(ndx_util_SETUP_PY_PACKAGES "ndx_util")
-set(ndx_util_SETUP_PY_PACKAGE_DIRS "src/ndx_util")
-set(ndx_util_SETUP_PY_MODULES "")
-set(ndx_util_SETUP_PY_MODULE_DIRS "")

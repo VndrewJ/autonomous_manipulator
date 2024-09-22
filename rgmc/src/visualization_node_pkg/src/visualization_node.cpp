@@ -81,9 +81,9 @@ private:
     {
         for (auto &point : cloud->points)
         {
-            point.r = 100;
-            point.g = 0;
-            point.b = 0;
+            point.r = r;
+            point.g = g;
+            point.b = b;
         }
     }
 };

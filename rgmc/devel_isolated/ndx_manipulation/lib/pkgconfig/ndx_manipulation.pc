@@ -1,8 +1,0 @@
-prefix=/home/mechp4p/autonomous_manipulator/rgmc/devel_isolated/ndx_manipulation
-
-Name: ndx_manipulation
-Description: Description of ndx_manipulation
-Version: 0.0.0
-Cflags: -I/home/mechp4p/autonomous_manipulator/rgmc/devel_isolated/ndx_manipulation/include
-Libs: -L${prefix}/lib 
-Requires: message_runtime actionlib_msgs
