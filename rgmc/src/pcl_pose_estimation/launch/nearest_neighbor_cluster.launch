@@ -1,8 +1,8 @@
 <launch>
   <!-- Define the node -->
-  <node name="nearest_neighbor_node" pkg="pcl_pose_estimation" type="nearest_neighbor_node" output="screen"
+  <node name="nearest_neighbor_cluster_node" pkg="pcl_pose_estimation" type="nearest_neighbor_cluster_node" output="screen"
         args="--k 16 --thresh 50.0 
-              $(find pcl_pose_estimation)/data/data_2024-9-26_19-30-45/cluster_0/point_cloud_frame_0_cluster_0_vfh.pcd
+              $(find pcl_pose_estimation)/data/901.125.07/1258020693333_cluster_0_nxyz_vfh.pcd
               $(find pcl_pose_estimation)/data/kdtree.idx 
               $(find pcl_pose_estimation)/data/training_data.hdf5 
               $(find pcl_pose_estimation)/data/training_data.list"/>

@@ -10,6 +10,7 @@
 #include <pcl/features/normal_3d.h>
 #include <pcl/features/vfh.h>
 #include <pcl/search/kdtree.h>
+#include <pcl/segmentation/extract_clusters.h>
 #include <sstream>
 #include <ctime>
 #include <fstream>
@@ -26,6 +27,17 @@ std::string createDataDirectory(const std::string& base_directory) {
     dir_name << base_directory << "/data_"
              << (local_time->tm_year + 1900) << '-' << (local_time->tm_mon + 1) << '-' << local_time->tm_mday
              << '_' << local_time->tm_hour << '-' << local_time->tm_min << '-' << local_time->tm_sec;
+
+    // Create the directory
+    fs::create_directories(dir_name.str());
+
+    return dir_name.str();
+}
+
+std::string createClusterDirectory(const std::string& base_directory, int cluster_idx) {
+    // Create a directory for each cluster
+    std::ostringstream dir_name;
+    dir_name << base_directory << "/cluster_" << cluster_idx;
 
     // Create the directory
     fs::create_directories(dir_name.str());
@@ -52,20 +64,21 @@ void savePointCloud(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, const std:
         file << "POINTS " << cloud->points.size() << "\n";
         file << "DATA ascii\n";
 
-        // Write the point cloud data
+        // Write the point cloud data for the cluster
         for (const auto& point : cloud->points) {
             file << point.x << " " << point.y << " " << point.z << " "
-                 << "0 " << "0 " << "0 " << "0 " << "0 " << "0 " << "0 " << "0 " << "0 "
-                 << "0\n"; // Placeholder values for additional fields
+                 << "0 " << "0 " << "0 " // Placeholder for rgb, u, v
+                 << "0 " << "0 " << "0 " // Placeholder for vx, vy, vz
+                 << "0 " << "0 " << "0 " // Placeholder for normal_x, normal_y, normal_z
+                 << "0\n"; // Placeholder for curvature
         }
 
         file.close();
-        ROS_INFO("Saved point cloud to %s", filename.str().c_str());
+        ROS_INFO("Saved point cloud cluster to %s", filename.str().c_str());
     } else {
         ROS_ERROR("Could not open file %s for writing.", filename.str().c_str());
     }
 }
-
 
 
 void saveVFH(const pcl::PointCloud<pcl::VFHSignature308>::Ptr& vfhs, const std::string& directory, const std::string& base_filename) {
@@ -85,7 +98,7 @@ void saveVFH(const pcl::PointCloud<pcl::VFHSignature308>::Ptr& vfhs, const std::
         file << "POINTS 1\n";
         file << "DATA ascii\n";
 
-        // Write the VFH histogram data
+        // Write the VFH histogram data for the cluster
         for (const auto& vfh : vfhs->points) {
             for (int i = 0; i < 308; ++i) {
                 file << vfh.histogram[i] << " ";
@@ -94,9 +107,67 @@ void saveVFH(const pcl::PointCloud<pcl::VFHSignature308>::Ptr& vfhs, const std::
         }
 
         file.close();
-        ROS_INFO("Saved VFH features to %s", filename.str().c_str());
+        ROS_INFO("Saved VFH features for cluster to %s", filename.str().c_str());
     } else {
         ROS_ERROR("Could not open file %s for writing.", filename.str().c_str());
+    }
+}
+
+void extractAndSaveAllClusters(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud, const std::string& base_directory, int frame_count) {
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>);
+    tree->setInputCloud(cloud);
+
+    std::vector<pcl::PointIndices> cluster_indices;
+    pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
+    ec.setClusterTolerance(0.02); // 2cm
+    ec.setMinClusterSize(8000);    // Minimum size for a cluster
+    ec.setMaxClusterSize(30000);  // Maximum size for a cluster
+    ec.setSearchMethod(tree);
+    ec.setInputCloud(cloud);
+    ec.extract(cluster_indices);
+
+    if (cluster_indices.empty()) {
+        ROS_WARN("No clusters found in the point cloud.");
+        return;
+    }
+
+    int cluster_idx = 0;
+    for (const auto& indices : cluster_indices) {
+        // Extract each cluster and save it in a separate directory
+        pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_cluster(new pcl::PointCloud<pcl::PointXYZ>);
+        for (const auto& idx : indices.indices) {
+            cloud_cluster->push_back((*cloud)[idx]);
+        }
+        cloud_cluster->width = cloud_cluster->size();
+        cloud_cluster->height = 1;
+        cloud_cluster->is_dense = true;
+
+        // Create a directory for this cluster
+        std::string cluster_directory = createClusterDirectory(base_directory, cluster_idx);
+        std::string base_filename = "frame_" + std::to_string(frame_count) + "_cluster_" + std::to_string(cluster_idx);
+
+        // Save the point cloud
+        savePointCloud(cloud_cluster, cluster_directory, base_filename);
+
+        // Compute and save VFH features for the cluster
+        pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> normal_estimation;
+        pcl::search::KdTree<pcl::PointXYZ>::Ptr tree_normal(new pcl::search::KdTree<pcl::PointXYZ>);
+        normal_estimation.setInputCloud(cloud_cluster);
+        normal_estimation.setSearchMethod(tree_normal);
+        pcl::PointCloud<pcl::Normal>::Ptr cloud_normals(new pcl::PointCloud<pcl::Normal>);
+        normal_estimation.setKSearch(50);
+        normal_estimation.compute(*cloud_normals);
+
+        pcl::VFHEstimation<pcl::PointXYZ, pcl::Normal, pcl::VFHSignature308> vfh;
+        vfh.setInputCloud(cloud_cluster);
+        vfh.setInputNormals(cloud_normals);
+        pcl::PointCloud<pcl::VFHSignature308>::Ptr vfhs(new pcl::PointCloud<pcl::VFHSignature308>);
+        vfh.compute(*vfhs);
+
+        saveVFH(vfhs, cluster_directory, base_filename);
+
+        ROS_INFO("Cluster %d extracted and saved.", cluster_idx);
+        cluster_idx++;
     }
 }
 
@@ -140,7 +211,6 @@ int main(int argc, char** argv) {
         rs2::points points = pc.calculate(depth);
 
         pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
-        pcl::PointCloud<pcl::Normal>::Ptr normals(new pcl::PointCloud<pcl::Normal>);
 
         auto vertices = points.get_vertices();
         for (int i = 0; i < points.size(); ++i) {
@@ -153,28 +223,8 @@ int main(int argc, char** argv) {
         cloud->height = 1;
         cloud->is_dense = false;
 
-        // Compute normals
-        pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> normal_estimation;
-        pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>);
-        normal_estimation.setInputCloud(cloud);
-        normal_estimation.setSearchMethod(tree);
-        pcl::PointCloud<pcl::Normal>::Ptr cloud_normals(new pcl::PointCloud<pcl::Normal>);
-        normal_estimation.setKSearch(50);
-        normal_estimation.compute(*cloud_normals);
-
-        // Compute VFH features
-        pcl::VFHEstimation<pcl::PointXYZ, pcl::Normal, pcl::VFHSignature308> vfh;
-        vfh.setInputCloud(cloud);
-        vfh.setInputNormals(cloud_normals);
-        pcl::search::KdTree<pcl::PointXYZ>::Ptr vfh_tree(new pcl::search::KdTree<pcl::PointXYZ>);
-        vfh.setSearchMethod(vfh_tree);
-        pcl::PointCloud<pcl::VFHSignature308>::Ptr vfhs(new pcl::PointCloud<pcl::VFHSignature308>);
-        vfh.compute(*vfhs);
-
-        // Save point cloud and VFH features
-        std::string base_filename = "frame_" + std::to_string(frame_count);
-        savePointCloud(cloud, data_directory, base_filename);
-        saveVFH(vfhs, data_directory, base_filename);
+        // Apply Euclidean cluster extraction and save all clusters
+        extractAndSaveAllClusters(cloud, data_directory, frame_count);
 
         // Publish and visualize the point cloud
         sensor_msgs::PointCloud2 cloud_msg;
@@ -187,7 +237,7 @@ int main(int argc, char** argv) {
         viewer->addPointCloud<pcl::PointXYZ>(cloud, "sample cloud");
         viewer->spinOnce(100);
 
-        ROS_INFO("Point cloud published and VFH features saved");
+        ROS_INFO("Clusters extracted and saved");
 
         loop_rate.sleep();
         frame_count++;
