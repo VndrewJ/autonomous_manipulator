@@ -5,6 +5,8 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
+#include <tf2_ros/transform_broadcaster.h>
+#include <geometry_msgs/TransformStamped.h>
 
 // Include the headers you already have for the alignment_prerejective code
 #include <pcl/registration/sample_consensus_prerejective.h>
@@ -13,6 +15,7 @@
 #include <pcl/keypoints/sift_keypoint.h>
 #include <pcl/features/fpfh.h>
 #include <pcl/features/vfh.h>
+#include <Eigen/Geometry>
 
 class AlignmentNode
 {
@@ -25,6 +28,9 @@ public:
         pub_ = nh_.advertise<sensor_msgs::PointCloud2>("aligned_object_cloud", 1);
         // Load the object PCD file
         pcl::io::loadPCDFile<pcl::PointXYZ>("/home/mechp4p/autonomous_manipulator/rgmc/src/real_sense_alignment_pcl/data/chef.pcd", *object_cloud_);
+
+        // Initialize tf2 broadcaster
+        br_ = std::make_shared<tf2_ros::TransformBroadcaster>();
     }
 
     void pointCloudCallback(const sensor_msgs::PointCloud2ConstPtr &cloud_msg)
@@ -43,8 +49,35 @@ private:
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr object_cloud_{new pcl::PointCloud<pcl::PointXYZ>};
     pcl::PointCloud<pcl::PointXYZ>::Ptr scene_cloud_{new pcl::PointCloud<pcl::PointXYZ>};
+    std::shared_ptr<tf2_ros::TransformBroadcaster> br_;
 
-    // Function to run alignment (this is where your current alignment code goes)
+    // Function to publish transform
+    void publishTransform(const Eigen::Matrix4f &transformation_matrix)
+    {
+        geometry_msgs::TransformStamped transformStamped;
+
+        // Set the header details
+        transformStamped.header.stamp = ros::Time::now();
+        transformStamped.header.frame_id = "camera_link";  // Assuming camera_link is your reference frame
+        transformStamped.child_frame_id = "object_frame";  // Frame for the aligned object
+
+        // Set the translation from the transformation matrix
+        transformStamped.transform.translation.x = transformation_matrix(0, 3);
+        transformStamped.transform.translation.y = transformation_matrix(1, 3);
+        transformStamped.transform.translation.z = transformation_matrix(2, 3);
+
+        // Extract rotation as quaternion from the transformation matrix
+        Eigen::Quaternionf q(transformation_matrix.block<3,3>(0, 0)); // Extract rotation part
+        transformStamped.transform.rotation.x = q.x();
+        transformStamped.transform.rotation.y = q.y();
+        transformStamped.transform.rotation.z = q.z();
+        transformStamped.transform.rotation.w = q.w();
+
+        // Broadcast the transform
+        br_->sendTransform(transformStamped);
+    }
+
+    // Function to run alignment
     void runAlignment()
     {
         // Ensure that both object and scene clouds are valid
@@ -117,10 +150,21 @@ private:
         if (align.hasConverged())
         {
             ROS_INFO("Alignment succeeded. Fitness score: %f", align.getFitnessScore());
-            // Optionally: Get the transformation
+            
+            // Get the transformation matrix
             Eigen::Matrix4f transformation = align.getFinalTransformation();
-            ROS_INFO_STREAM("Transformation Matrix:\n"
-                            << transformation);
+            
+            // ================== ADD ROTATION CORRECTION ==================
+            // Apply a 90-degree rotation correction around the Y-axis
+            Eigen::Matrix4f rotation_correction = Eigen::Matrix4f::Identity();
+            rotation_correction.block<3, 3>(0, 0) = Eigen::AngleAxisf(M_PI / 2, Eigen::Vector3f::UnitY()).toRotationMatrix();
+            transformation = rotation_correction * transformation;
+            // ===============================================================
+
+            ROS_INFO_STREAM("Transformation Matrix (with correction):\n" << transformation);
+
+            // Publish the transformation
+            publishTransform(transformation);
 
             // Optionally publish the aligned object
             sensor_msgs::PointCloud2 aligned_msg;

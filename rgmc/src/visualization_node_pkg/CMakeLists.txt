@@ -8,10 +8,14 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
   std_msgs
+  cv_bridge
+  image_transport
 )
 
 find_package(PCL REQUIRED)
 find_package(realsense2 REQUIRED PATHS /usr/local/lib/cmake/realsense2)
+find_package(OpenCV REQUIRED)
+
 
 catkin_package(CATKIN_DEPENDS
 	roscpp
@@ -19,6 +23,8 @@ catkin_package(CATKIN_DEPENDS
 	std_msgs
 	pcl_ros
 	pcl_conversions
+  cv_bridge
+  image_transport
 )
 
 include_directories(
@@ -26,6 +32,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
   ${realsense2_INCLUDE_DIRS} 
+  ${OpenCV_INCLUDE_DIRS}
 )
 
 add_executable(visualization_node src/visualization_node.cpp)
@@ -34,6 +41,7 @@ target_link_libraries(visualization_node
   ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
   ${realsense2_LIBRARY}  # Link the RealSense library
+  ${OpenCV_LIBS}
 )
 
 install(TARGETS visualization_node
