@@ -1,16 +1,15 @@
+<?xml version="1.0"?>
 <launch>
-  <!-- Launch the RealSense camera using nodelets -->
+  <!-- Launch RealSense Camera with pointcloud filter -->
   <include file="$(find realsense2_camera)/launch/rs_camera.launch">
-    <arg name="enable_pointcloud" value="true" />
-    <arg name="clip_distance" value="-2.0" />
+    <arg name="filters" value="pointcloud"/>
+    <arg name="enable_depth" value="true"/>
+    <arg name="enable_color" value="true"/>
+    <arg name="enable_pointcloud" value="true"/>
   </include>
 
-  <!-- Run the alignment node -->
-  <arg name="object" default="/home/mechp4p/Desktop/Catkin/src/robust_pose_estimation_pcl/data/chef_with_curvature.pcd" />
-  
-  <node pkg="real_sense_alignment_pcl" type="real_sense_alignment" name="real_sense_alignment_node" output="screen">
-    <param name="object_pcd" value="$(arg object)" />
-  </node>
+  <!-- Launch the alignment node -->
+  <node pkg="pointcloud_filter_testing" type="pointcloud_filter_publisher" name="pointcloud_filter_publisher" output="screen"/>
 
-
+  <node name="real_sense_alignment_node" pkg="real_sense_alignment_pcl" type="real_sense_alignment_node" output="screen"/>
 </launch>

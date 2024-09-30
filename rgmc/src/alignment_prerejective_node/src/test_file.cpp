@@ -48,7 +48,8 @@ int main(int argc, char** argv) {
 
     // Downsample the point cloud (optional, depending on your needs)
     pcl::VoxelGrid<PointT> grid;
-    grid.setLeafSize(0.000001f, 0.000001f, 0.000001f);  // Smaller leaf size for more points
+    const float leaf = 0.00001f; // Increase the leaf size for more aggressive downsampling
+    grid.setLeafSize(leaf, leaf, leaf);  // Smaller leaf size for more points
     pcl::PointCloud<PointT>::Ptr object_downsampled(new pcl::PointCloud<PointT>);
     grid.setInputCloud(object);
     grid.filter(*object_downsampled);
