@@ -145,7 +145,7 @@ int main(int argc, char **argv)
     return (-1);
   }
 
-  ros::init(argc, argv, "nearest_neighbor_node");
+  ros::init(argc, argv, "original_neighbor_node");
   ros::NodeHandle nh;
 
   int k = 6;

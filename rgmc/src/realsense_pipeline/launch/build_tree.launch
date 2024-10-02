@@ -1,0 +1,4 @@
+<launch>
+  <node name="build_node" pkg="realsense_pipeline" type="build_node" output="screen"
+        args="$(find realsense_pipeline)/data/"/>
+</launch>
