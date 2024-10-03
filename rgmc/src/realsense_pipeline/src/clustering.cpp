@@ -23,7 +23,7 @@ void pointCloudCallback(const sensor_msgs::PointCloud2ConstPtr &cloud_msg) {
     pcl::PassThrough<pcl::PointXYZ> pass;
     pass.setInputCloud(input_cloud);
     pass.setFilterFieldName("z"); // Filter based on z-axis (depth)
-    pass.setFilterLimits(0.0, 2.0); // Only keep points between 0 and 2 meters
+    pass.setFilterLimits(0.0, 4.0); // Only keep points between 0 and 2 meters
     pass.filter(*filtered_cloud);
 
     // Step 2: Determine the min and max cluster sizes based on reference object size
@@ -41,7 +41,7 @@ void pointCloudCallback(const sensor_msgs::PointCloud2ConstPtr &cloud_msg) {
         pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
         ec.setClusterTolerance(0.02); // Set the cluster tolerance in meters
         ec.setMinClusterSize(1000); // Set min cluster size dynamically
-        ec.setMaxClusterSize(20000); // Set max cluster size dynamically
+        ec.setMaxClusterSize(30000); // Set max cluster size dynamically
         ec.setSearchMethod(tree);
         ec.setInputCloud(filtered_cloud);
         ec.extract(cluster_indices);

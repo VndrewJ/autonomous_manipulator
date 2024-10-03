@@ -11,6 +11,9 @@
 #include <pcl/features/vfh.h>
 #include <pcl/search/kdtree.h>
 #include <pcl/segmentation/extract_clusters.h>
+#include <pcl/filters/statistical_outlier_removal.h>  // Include header for SOR filter
+#include <pcl/surface/mls.h>                          // Include header for MLS filter
+#include <pcl/search/kdtree.h>                         // Include header for KDTree search
 #include <sstream>
 #include <ctime>
 #include <fstream>
@@ -24,7 +27,7 @@ std::string createDataDirectory(const std::string& base_directory) {
 
     // Create a timestamped directory name
     std::ostringstream dir_name;
-    dir_name << base_directory << "/data_"
+    dir_name << base_directory << "/test_data"
              << (local_time->tm_year + 1900) << '-' << (local_time->tm_mon + 1) << '-' << local_time->tm_mday
              << '_' << local_time->tm_hour << '-' << local_time->tm_min << '-' << local_time->tm_sec;
 
@@ -118,8 +121,8 @@ void extractAndSaveAllClusters(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud,
 
     std::vector<pcl::PointIndices> cluster_indices;
     pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
-    ec.setClusterTolerance(0.025); // 2cm
-    ec.setMinClusterSize(300);    // Minimum size for a cluster
+    ec.setClusterTolerance(0.02); // 2cm
+    ec.setMinClusterSize(30);    // Minimum size for a cluster
     ec.setMaxClusterSize(30000);  // Maximum size for a cluster
     ec.setSearchMethod(tree);
     ec.setInputCloud(cloud);
@@ -197,7 +200,7 @@ int main(int argc, char** argv) {
     // Set up PCL visualizer
     pcl::visualization::PCLVisualizer::Ptr viewer(new pcl::visualization::PCLVisualizer("PointCloud Viewer"));
     viewer->setBackgroundColor(0, 0, 0);
-    viewer->addCoordinateSystem(1.0);
+    viewer->addCoordinateSystem(2.0);
     viewer->initCameraParameters();
 
     ros::Rate loop_rate(10);
@@ -222,26 +225,45 @@ int main(int argc, char** argv) {
         cloud->height = 1;
         cloud->is_dense = false;
 
-        // Apply a passthrough filter to remove points further than 2 meters
+        // Apply a passthrough filter to remove points further than 1 meter
         pcl::PointCloud<pcl::PointXYZ>::Ptr filtered_cloud(new pcl::PointCloud<pcl::PointXYZ>);
         pcl::PassThrough<pcl::PointXYZ> pass;
         pass.setInputCloud(cloud);
         pass.setFilterFieldName("z");
-        pass.setFilterLimits(0.0, 0.9);  // Keep points between 0 and 2 meters
+        pass.setFilterLimits(0.0, 1.0);  // Keep points between 0 and 1 meter
         pass.filter(*filtered_cloud);
 
-        // Apply Euclidean cluster extraction and save all clusters
-        extractAndSaveAllClusters(filtered_cloud, data_directory, frame_count);
+        // Apply Statistical Outlier Removal (SOR) filter to remove noisy points
+        pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
+        sor.setInputCloud(filtered_cloud);
+        sor.setMeanK(50);               // Number of neighbors to analyze
+        sor.setStddevMulThresh(1.0);    // Threshold multiplier for distance
+        pcl::PointCloud<pcl::PointXYZ>::Ptr sor_filtered_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+        sor.filter(*sor_filtered_cloud);
+
+        // Apply Moving Least Squares (MLS) for smoothing the point cloud
+        pcl::PointCloud<pcl::PointXYZ>::Ptr smoothed_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+        pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointXYZ> mls;
+        mls.setInputCloud(sor_filtered_cloud);
+        mls.setComputeNormals(false);
+        mls.setSearchRadius(0.03);  // Radius for surface smoothing
+        mls.setPolynomialFit(true);
+        pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>);
+        mls.setSearchMethod(tree);
+        mls.process(*smoothed_cloud);
+
+        // Extract and save all clusters
+        extractAndSaveAllClusters(smoothed_cloud, data_directory, frame_count);
 
         // Publish and visualize the point cloud
         sensor_msgs::PointCloud2 cloud_msg;
-        pcl::toROSMsg(*filtered_cloud, cloud_msg);
+        pcl::toROSMsg(*smoothed_cloud, cloud_msg);
         cloud_msg.header.frame_id = "camera_frame";
         cloud_msg.header.stamp = ros::Time::now();
         cloud_pub.publish(cloud_msg);
 
         viewer->removeAllPointClouds();
-        viewer->addPointCloud<pcl::PointXYZ>(filtered_cloud, "sample cloud");
+        viewer->addPointCloud<pcl::PointXYZ>(smoothed_cloud, "sample cloud");
         viewer->spinOnce(100);
 
         ROS_INFO("Clusters extracted and saved");

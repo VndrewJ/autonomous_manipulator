@@ -11,6 +11,7 @@
 #include <pcl/registration/sample_consensus_prerejective.h>
 #include <pcl/visualization/pcl_visualizer.h>
 #include <thread>
+#include <future>
 
 ros::Publisher pub;
 tf2_ros::TransformBroadcaster *tf_broadcaster;
@@ -24,6 +25,37 @@ void setupViewer()
     viewer->initCameraParameters();
 }
 
+// Function to estimate normals
+pcl::PointCloud<pcl::Normal>::Ptr estimateNormals(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+{
+    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> ne;
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>);
+    ne.setInputCloud(cloud);
+    ne.setSearchMethod(tree);
+    ne.setKSearch(10);
+
+    pcl::PointCloud<pcl::Normal>::Ptr normals(new pcl::PointCloud<pcl::Normal>);
+    ne.compute(*normals);
+
+    return normals;
+}
+
+// Function to compute FPFH features
+pcl::PointCloud<pcl::FPFHSignature33>::Ptr computeFPFHFeatures(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, pcl::PointCloud<pcl::Normal>::Ptr normals)
+{
+    pcl::FPFHEstimation<pcl::PointXYZ, pcl::Normal, pcl::FPFHSignature33> fpfh;
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>);
+    fpfh.setInputCloud(cloud);
+    fpfh.setInputNormals(normals);
+    fpfh.setSearchMethod(tree);
+    fpfh.setRadiusSearch(0.03);
+
+    pcl::PointCloud<pcl::FPFHSignature33>::Ptr features(new pcl::PointCloud<pcl::FPFHSignature33>);
+    fpfh.compute(*features);
+
+    return features;
+}
+
 void cloudCallback(const sensor_msgs::PointCloud2ConstPtr &input)
 {
     // Convert the sensor_msgs/PointCloud2 data to pcl::PointCloud<PointXYZ>
@@ -32,7 +64,7 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr &input)
 
     // Load object point cloud (this can be read from a PCD file or set statically)
     pcl::PointCloud<pcl::PointXYZ>::Ptr object(new pcl::PointCloud<pcl::PointXYZ>);
-    if (pcl::io::loadPCDFile<pcl::PointXYZ>("/home/mechp4p/Downloads/2object_converted.pcd", *object) == -1)
+    if (pcl::io::loadPCDFile<pcl::PointXYZ>("/home/mechp4p/autonomous_manipulator/rgmc/src/real_sense_alignment_pcl/data/object_converted.pcd", *object) == -1)
     {
         ROS_ERROR("Couldn't read object PCD file.");
         return;
@@ -40,42 +72,26 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr &input)
 
     // Downsample the point clouds for processing
     pcl::VoxelGrid<pcl::PointXYZ> grid;
-    const float leaf = 0.008f; // Increase the leaf size for more aggressive downsampling
+    const float leaf = 0.005f; // Increase the leaf size for more aggressive downsampling
     grid.setLeafSize(leaf, leaf, leaf);
     grid.setInputCloud(object);
     grid.filter(*object);
     grid.setInputCloud(scene);
     grid.filter(*scene);
 
-    // Estimate normals for object and scene
-    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> ne;
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>);
-    pcl::PointCloud<pcl::Normal>::Ptr object_normals(new pcl::PointCloud<pcl::Normal>);
-    pcl::PointCloud<pcl::Normal>::Ptr scene_normals(new pcl::PointCloud<pcl::Normal>);
+    // Estimate normals for object and scene concurrently
+    auto object_normals_future = std::async(std::launch::async, estimateNormals, object);
+    auto scene_normals_future = std::async(std::launch::async, estimateNormals, scene);
 
-    ne.setSearchMethod(tree);
-    ne.setKSearch(10);
+    pcl::PointCloud<pcl::Normal>::Ptr object_normals = object_normals_future.get();
+    pcl::PointCloud<pcl::Normal>::Ptr scene_normals = scene_normals_future.get();
 
-    ne.setInputCloud(object);
-    ne.compute(*object_normals);
-    ne.setInputCloud(scene);
-    ne.compute(*scene_normals);
+    // Compute features for object and scene concurrently
+    auto object_features_future = std::async(std::launch::async, computeFPFHFeatures, object, object_normals);
+    auto scene_features_future = std::async(std::launch::async, computeFPFHFeatures, scene, scene_normals);
 
-    // Compute features for object and scene
-    pcl::FPFHEstimation<pcl::PointXYZ, pcl::Normal, pcl::FPFHSignature33> fpfh;
-    pcl::PointCloud<pcl::FPFHSignature33>::Ptr object_features(new pcl::PointCloud<pcl::FPFHSignature33>);
-    pcl::PointCloud<pcl::FPFHSignature33>::Ptr scene_features(new pcl::PointCloud<pcl::FPFHSignature33>);
-
-    fpfh.setSearchMethod(tree);
-    fpfh.setRadiusSearch(0.03);
-
-    fpfh.setInputCloud(object);
-    fpfh.setInputNormals(object_normals);
-    fpfh.compute(*object_features);
-
-    fpfh.setInputCloud(scene);
-    fpfh.setInputNormals(scene_normals);
-    fpfh.compute(*scene_features);
+    pcl::PointCloud<pcl::FPFHSignature33>::Ptr object_features = object_features_future.get();
+    pcl::PointCloud<pcl::FPFHSignature33>::Ptr scene_features = scene_features_future.get();
 
     // Perform alignment
     pcl::SampleConsensusPrerejective<pcl::PointXYZ, pcl::PointXYZ, pcl::FPFHSignature33> align;
@@ -93,12 +109,7 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr &input)
     pcl::PointCloud<pcl::PointXYZ>::Ptr aligned_object(new pcl::PointCloud<pcl::PointXYZ>);
     align.align(*aligned_object);
 
-    pcl::console::print_info("\n");
-    pcl::console::print_info("Inliers: %i/%i\n", align.getInliers().size(), object->size());
-    pcl::console::print_info("Inliers: %i\n", (align.getInliers().size() * 100) / object->size());
-    pcl::console::print_info("\n");
-
-    if (align.hasConverged() && (((align.getInliers().size() * 100) / object->size()) >= 50))
+    if (align.hasConverged())
     {
         // Broadcast the transform
         Eigen::Matrix4f transformation = align.getFinalTransformation();
@@ -137,6 +148,7 @@ void cloudCallback(const sensor_msgs::PointCloud2ConstPtr &input)
         ROS_ERROR("Alignment did not converge!");
     }
 }
+
 
 int main(int argc, char **argv)
 {

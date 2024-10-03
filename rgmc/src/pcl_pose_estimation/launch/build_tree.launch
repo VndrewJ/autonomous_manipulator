@@ -1,4 +1,4 @@
 <launch>
   <node name="build_tree_node" pkg="pcl_pose_estimation" type="build_tree_node" output="screen"
-        args="$(find pcl_pose_estimation)/data/"/>
+        args="$(find pcl_pose_estimation)/test_data/"/>
 </launch>

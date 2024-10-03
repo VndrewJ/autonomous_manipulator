@@ -129,7 +129,7 @@ std::string get_dir()
   if (pos != std::string::npos)
   {
     current_dir = current_dir.substr(0, pos);  // Trim the path to remove "/src" and beyond
-    current_dir = current_dir + "/data/";
+    current_dir = current_dir + "/test_data/";
   }
 
   return current_dir;

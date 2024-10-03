@@ -24,9 +24,7 @@ std::string createDataDirectory(const std::string& base_directory) {
 
     // Create a timestamped directory name
     std::ostringstream dir_name;
-    dir_name << base_directory << "/data_"
-             << (local_time->tm_year + 1900) << '-' << (local_time->tm_mon + 1) << '-' << local_time->tm_mday
-             << '_' << local_time->tm_hour << '-' << local_time->tm_min << '-' << local_time->tm_sec;
+    dir_name << base_directory << "/data";
 
     // Create the directory
     fs::create_directories(dir_name.str());
@@ -119,9 +117,9 @@ void extractAndSaveAllClusters(const pcl::PointCloud<pcl::PointXYZ>::Ptr& cloud,
 
     std::vector<pcl::PointIndices> cluster_indices;
     pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
-    ec.setClusterTolerance(0.02); // 2cm
-    ec.setMinClusterSize(8000);    // Minimum size for a cluster
-    ec.setMaxClusterSize(30000);  // Maximum size for a cluster
+    ec.setClusterTolerance(0.05); // 5cm
+    ec.setMinClusterSize(500);    // Minimum size for a cluster
+    ec.setMaxClusterSize(50000);  // Maximum size for a cluster
     ec.setSearchMethod(tree);
     ec.setInputCloud(cloud);
     ec.extract(cluster_indices);
@@ -223,18 +221,26 @@ int main(int argc, char** argv) {
         cloud->height = 1;
         cloud->is_dense = false;
 
+        // Apply a passthrough filter to remove points further than 1 meter
+        pcl::PointCloud<pcl::PointXYZ>::Ptr filtered_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+        pcl::PassThrough<pcl::PointXYZ> pass;
+        pass.setInputCloud(cloud);
+        pass.setFilterFieldName("z");
+        pass.setFilterLimits(0.0, 1.0); // Keep points between 0 and 1 meter
+        pass.filter(*filtered_cloud);
+
         // Apply Euclidean cluster extraction and save all clusters
-        extractAndSaveAllClusters(cloud, data_directory, frame_count);
+        extractAndSaveAllClusters(filtered_cloud, data_directory, frame_count);
 
         // Publish and visualize the point cloud
         sensor_msgs::PointCloud2 cloud_msg;
-        pcl::toROSMsg(*cloud, cloud_msg);
+        pcl::toROSMsg(*filtered_cloud, cloud_msg);
         cloud_msg.header.frame_id = "camera_frame";
         cloud_msg.header.stamp = ros::Time::now();
         cloud_pub.publish(cloud_msg);
 
         viewer->removeAllPointClouds();
-        viewer->addPointCloud<pcl::PointXYZ>(cloud, "sample cloud");
+        viewer->addPointCloud<pcl::PointXYZ>(filtered_cloud, "sample cloud");
         viewer->spinOnce(100);
 
         ROS_INFO("Clusters extracted and saved");
