@@ -153,7 +153,7 @@ int main(int argc, char **argv)
 
   if (argc < 2)
   {
-    pcl::console::print_error("Need at least three parameters! Syntax is: %s <query_vfh_model.pcd> [options] {kdtree.idx} {training_data.hdf5} {training_data.list}\n", argv[0]);
+    pcl::console::print_error("Need at least three parameters! Syntax is: %s <query_vfh_model.pcd> [options] {kdtree.idx} {training_data.h5} {training_data.list}\n", argv[0]);
     pcl::console::print_info("    where [options] are:  -k      = number of nearest neighbors to search for in the tree (default: ");
     pcl::console::print_value("%d", k);
     pcl::console::print_info(")\n");
@@ -176,7 +176,7 @@ int main(int argc, char **argv)
   pcl::console::parse_argument(argc, argv, "-k", k);
 
   std::string kdtree_idx_file_name = current_dir + "kdtree.idx";
-  std::string training_data_h5_file_name = current_dir + "training_data.hdf5";
+  std::string training_data_h5_file_name = current_dir + "training_data.h5";
   std::string training_data_list_file_name = current_dir + "training_data.list";
 
   std::vector<vfh_model> models;
