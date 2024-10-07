@@ -3,40 +3,54 @@
 #include <pcl/point_cloud.h>
 #include <pcl/filters/passthrough.h>
 #include <sensor_msgs/PointCloud2.h>
+#include <pcl/filters/statistical_outlier_removal.h>  // Added header for SOR filter
+#include <pcl/surface/mls.h>                          // Added header for MLS filter
+#include <pcl/search/kdtree.h>                         // Added header for KDTree search
 
 ros::Publisher pub;
 
 void cloudCallback(const sensor_msgs::PointCloud2ConstPtr& input)
 {
-    // static ros::Time last_time = ros::Time::now();
-    // ros::Duration interval(1.0 / 5.0); // Set the rate to 2 Hz (change this value as needed)
-
-    // if ((ros::Time::now() - last_time) < interval) {
-    //     // If the interval hasn't elapsed, skip processing
-    //     return;
-    // }
-    // last_time = ros::Time::now();
-    // Convert the sensor_msgs/PointCloud2 data to pcl/PointCloud<PointXYZ>
+    // Convert the sensor_msgs/PointCloud2 data to pcl::PointCloud<pcl::PointXYZ>
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
     pcl::fromROSMsg(*input, *cloud);
 
-    // Create a PassThrough filter to remove points further than 2 meters
+    // Create a PassThrough filter to remove points further than 0.99 meters
     pcl::PassThrough<pcl::PointXYZ> pass;
     pass.setInputCloud(cloud);
     pass.setFilterFieldName("z");
-    pass.setFilterLimits(0.0, 1.5);  // Keep points between 0 and 2 meters
-
+    pass.setFilterLimits(0.0, 0.99);  // Keep points between 0 and 0.99 meters
     pcl::PointCloud<pcl::PointXYZ>::Ptr filtered_cloud(new pcl::PointCloud<pcl::PointXYZ>);
     pass.filter(*filtered_cloud);
 
-    // Convert the pcl/PointCloud back to sensor_msgs/PointCloud2
+    // Apply Statistical Outlier Removal (SOR) filter to remove noisy points
+    pcl::StatisticalOutlierRemoval<pcl::PointXYZ> sor;
+    sor.setInputCloud(filtered_cloud);
+    sor.setMeanK(50);               // Number of neighbors to analyze
+    sor.setStddevMulThresh(1.0);    // Threshold multiplier for distance
+    pcl::PointCloud<pcl::PointXYZ>::Ptr sor_filtered_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    sor.filter(*sor_filtered_cloud);
+
+    // Apply Moving Least Squares (MLS) for smoothing the point cloud
+    pcl::PointCloud<pcl::PointXYZ>::Ptr smoothed_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointXYZ> mls;
+    mls.setInputCloud(sor_filtered_cloud);
+    mls.setComputeNormals(false);
+    mls.setSearchRadius(0.03);  // Radius for surface smoothing
+    mls.setPolynomialFit(true);
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>);
+    mls.setSearchMethod(tree);
+    mls.process(*smoothed_cloud);
+
+    // Convert the pcl::PointCloud back to sensor_msgs::PointCloud2
     sensor_msgs::PointCloud2 output;
-    pcl::toROSMsg(*filtered_cloud, output);
+    pcl::toROSMsg(*smoothed_cloud, output);
     output.header = input->header;
 
-    // Publish the filtered cloud
+    // Publish the filtered and smoothed cloud
     pub.publish(output);
 }
+
 
 int main(int argc, char** argv)
 {

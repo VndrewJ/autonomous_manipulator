@@ -1,0 +1,20 @@
+<launch>
+  <!-- Start the RealSense camera -->
+  <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+    <arg name="enable_pointcloud" value="true"/>
+    <!-- <arg name="enable_color" default="true" />
+    <arg name="pointcloud_texture_stream" default="RS2_STREAM_COLOR" /> -->
+  </include>
+
+  <!-- Start the clustering node -->
+  <node name="clustering_node" pkg="realsense_pipeline" type="clustering_node" output="screen">
+    <!-- Ensure that the cluster_node is launched after the camera is ready -->
+    <param name="wait_for_camera" value="true"/>
+  </node>
+
+  <!-- Start the nearest neighbor identification node -->
+  <node name="neighbor_node" pkg="realsense_pipeline" type="neighbor_node" output="screen">
+    <!-- Ensure nearest_neighbor_node launches after cluster_node -->
+    <param name="wait_for_clusters" value="true"/>
+  </node>
+</launch>

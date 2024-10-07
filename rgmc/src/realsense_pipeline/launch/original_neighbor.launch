@@ -1,0 +1,9 @@
+<launch>
+  <!-- Define the node -->
+  <node name="original_neighbor" pkg="realsense_pipeline" type="original_neighbor" output="screen"
+        args="--k 16 --thresh 50.0 
+              $(find realsense_pipeline)/data/data_17-13-20/cluster_4/point_cloud_frame_9_vfh.pcd
+              $(find realsense_pipeline)/data/kdtree.idx 
+              $(find realsense_pipeline)/data/training_data.h5 
+              $(find realsense_pipeline)/data/training_data.list"/>
+</launch>

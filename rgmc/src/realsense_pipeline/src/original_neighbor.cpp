@@ -129,7 +129,7 @@ std::string get_dir()
   if (pos != std::string::npos)
   {
     current_dir = current_dir.substr(0, pos);  // Trim the path to remove "/src" and beyond
-    current_dir = current_dir + "/test_data/";
+    current_dir = current_dir + "/data/";
   }
 
   return current_dir;
@@ -145,7 +145,7 @@ int main(int argc, char **argv)
     return (-1);
   }
 
-  ros::init(argc, argv, "nearest_neighbor_node");
+  ros::init(argc, argv, "original_neighbor_node");
   ros::NodeHandle nh;
 
   int k = 6;
@@ -153,7 +153,7 @@ int main(int argc, char **argv)
 
   if (argc < 2)
   {
-    pcl::console::print_error("Need at least three parameters! Syntax is: %s <query_vfh_model.pcd> [options] {kdtree.idx} {training_data.h5} {training_data.list}\n", argv[0]);
+    pcl::console::print_error("Need at least three parameters! Syntax is: %s <query_vfh_model.pcd> [options] {kdtree.idx} {training_data.hdf5} {training_data.list}\n", argv[0]);
     pcl::console::print_info("    where [options] are:  -k      = number of nearest neighbors to search for in the tree (default: ");
     pcl::console::print_value("%d", k);
     pcl::console::print_info(")\n");
