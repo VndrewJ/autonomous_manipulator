@@ -18,6 +18,7 @@
 #include <libgen.h>  // For dirname()
 
 typedef std::pair<std::string, std::vector<float> > vfh_model;
+void FindOffset(double x_c, double y_c, double z_c, double x_ee, double y_ee, double z_ee, double rx, double ry, double rz);
 
 /** \brief Loads an n-D histogram file as a VFH signature
   * \param path the input file name
@@ -129,10 +130,33 @@ std::string get_dir()
   if (pos != std::string::npos)
   {
     current_dir = current_dir.substr(0, pos);  // Trim the path to remove "/src" and beyond
-    current_dir = current_dir + "/test_data/";
+    current_dir = current_dir + "/data/";
   }
 
   return current_dir;
+}
+
+// Function definition
+void FindOffset(double x_c, double y_c, double z_c, double x_ee, double y_ee, double z_ee, double rx, double ry, double rz)
+{
+    double H_c, Th_c, Y_ce, X_ce;
+    H_c = sqrt(pow(x_c, 2) + pow(abs(z_c), 2));
+    Th_c = atan((z_c) / x_c) - M_PI / 4; // Use atan instead of tan for angle
+
+    if (Th_c < 0)
+    {
+      Th_c = abs(Th_c);
+      X_ce = x_ee - (H_c * cos(Th_c));
+      Y_ce = y_ee + (H_c * sin(Th_c));
+    } else {
+      X_ce = x_ee + (H_c * cos(Th_c));
+      Y_ce = y_ee + (H_c * sin(Th_c));
+    }
+
+    pcl::console::print_highlight("Input Data Centroid: [X_c: %f, Y_c: %f, Z_c: %f] [X_ee: %f, Y_ee: %f, Z_ee: %f]\n", x_c, y_c, z_c, x_ee, y_ee, z_ee); 
+
+    pcl::console::print_highlight("Base position Centroid: [X: %f, Y: %f, Z: %f]\n", 
+                                   X_ce, Y_ce, z_ee - y_c + 0.06); // Assuming z_ee is the z coordinate
 }
 
 int main(int argc, char **argv)
@@ -153,7 +177,7 @@ int main(int argc, char **argv)
 
   if (argc < 2)
   {
-    pcl::console::print_error("Need at least three parameters! Syntax is: %s <query_vfh_model.pcd> [options] {kdtree.idx} {training_data.hdf5} {training_data.list}\n", argv[0]);
+    pcl::console::print_error("Need at least three parameters! Syntax is: %s <query_vfh_model.pcd> [options] {kdtree.idx} {training_data.h5} {training_data.list}\n", argv[0]);
     pcl::console::print_info("    where [options] are:  -k      = number of nearest neighbors to search for in the tree (default: ");
     pcl::console::print_value("%d", k);
     pcl::console::print_info(")\n");
@@ -252,9 +276,21 @@ int main(int argc, char **argv)
 
   if (total_points > 0)
   {
+    // Retrieve parameters from the parameter server
+    double x_ee, y_ee, z_ee, rx, ry, rz;
+
+    nh.param("x_ee", x_ee, 0.5);
+    nh.param("y_ee", y_ee, 0.0);
+    nh.param("z_ee", z_ee, 0.5);
+    nh.param("rx", rx, 30.0);
+    nh.param("ry", ry, 45.0);
+    nh.param("rz", rz, 60.0);
+
     resultant_centroid /= total_points;
     pcl::console::print_highlight("Resultant Centroid: [X: %f, Y: %f, Z: %f]\n",
                                   resultant_centroid[0], resultant_centroid[1], resultant_centroid[2]);
+    FindOffset(resultant_centroid[0], resultant_centroid[1], resultant_centroid[2], x_ee, y_ee, z_ee, rx, ry, rz);
+    
   }
   else
   {

@@ -1,5 +1,5 @@
 <launch>
   <node name="capture_pcd_node" pkg="pcl_pose_estimation" type="capture_pcd_node" output="screen">
-    <param name="data_directory" value="$(find pcl_pose_estimation)/test_data"/>
+    <param name="data_directory" value="$(find pcl_pose_estimation)/data"/>
   </node>
 </launch>

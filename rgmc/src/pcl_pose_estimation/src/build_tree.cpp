@@ -14,10 +14,10 @@
 #include <libgen.h>  // For dirname()
 #include <cstdio>    // For remove()
 
-typedef std::pair<std::string, std::vector<float> > vfh_model;
+typedef std::pair<std::string, std::vector<float>> vfh_model;
 
 // Function to delete a file if it exists
-void deleteFileIfExists(const std::string& filename) {
+void deleteFileIfExists(const std::string &filename) {
     if (pcl_fs::exists(filename)) {
         if (remove(filename.c_str()) != 0) {
             std::cerr << "Error deleting file: " << filename << std::endl;
@@ -48,7 +48,7 @@ bool loadHist(const pcl_fs::path &path, vfh_model &vfh) {
             return (false);
         if ((int)cloud.width * cloud.height != 1)
             return (false);
-    } catch (const pcl::InvalidConversionException&) {
+    } catch (const pcl::InvalidConversionException &) {
         return (false);
     }
 
@@ -73,7 +73,8 @@ bool loadHist(const pcl_fs::path &path, vfh_model &vfh) {
   * \param extension the file extension containing the VFH features
   * \param models the resultant vector of histogram models
   */
-void loadFeatureModels(const pcl_fs::path &base_dir, const std::string &extension, std::vector<vfh_model> &models) {
+void loadFeatureModels(const pcl_fs::path &base_dir, const std::string &extension,
+                       std::vector<vfh_model> &models) {
     if (!pcl_fs::exists(base_dir) && !pcl_fs::is_directory(base_dir))
         return;
 
@@ -109,13 +110,13 @@ std::string get_dir() {
     // If "/src" is found, remove everything from "/src" onwards
     if (pos != std::string::npos) {
         current_dir = current_dir.substr(0, pos);  // Trim the path to remove "/src" and beyond
-        current_dir = current_dir + "/test_data/";
+        current_dir = current_dir + "/data/";
     }
 
     return current_dir;
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
     std::string current_dir = get_dir();
 
     if (current_dir.empty()) {
@@ -138,17 +139,17 @@ int main(int argc, char** argv) {
     std::string training_data_h5_file_name = current_dir + "training_data.h5";
     std::string training_data_list_file_name = current_dir + "training_data.list";
 
-    // Delete existing files if they exist
-    deleteFileIfExists(kdtree_idx_file_name);
-    deleteFileIfExists(training_data_h5_file_name);
-    deleteFileIfExists(training_data_list_file_name);
-
     std::vector<vfh_model> models;
 
     // Load the model histograms
     loadFeatureModels(argv[1], extension, models);
     pcl::console::print_highlight("Loaded %d VFH models. Creating training data %s/%s.\n",
-        (int)models.size(), training_data_h5_file_name.c_str(), training_data_list_file_name.c_str());
+                                   (int)models.size(), training_data_h5_file_name.c_str(), training_data_list_file_name.c_str());
+
+    // Delete existing files if they exist
+    deleteFileIfExists(kdtree_idx_file_name);
+    deleteFileIfExists(training_data_h5_file_name);
+    deleteFileIfExists(training_data_list_file_name);
 
     // Convert data into FLANN format
     flann::Matrix<float> data(new float[models.size() * models[0].second.size()], models.size(), models[0].second.size());
@@ -163,7 +164,7 @@ int main(int argc, char** argv) {
     flann::save_to_file(data, training_data_h5_file_name, "training_data");
     std::ofstream fs;
     fs.open(training_data_list_file_name.c_str());
-    for (std::size_t i = 0; i < models.size(); i++)
+    for (std::size_t i = 0; i < models.size(); ++i)
         fs << models[i].first << "\n";
     fs.close();
 

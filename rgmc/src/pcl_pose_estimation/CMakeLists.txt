@@ -29,6 +29,9 @@ include_directories(
   ${realsense2_INCLUDE_DIRS}
 )
 
+add_executable(UR5e src/Object_Position_Relative_To_Ur5e_base.cpp)
+target_link_libraries(UR5e ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${FLANN_LIBRARIES} ${HDF5_LIBRARIES})
+
 add_executable(test_node src/test.cpp)
 target_link_libraries(test_node ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${FLANN_LIBRARIES} ${HDF5_LIBRARIES})
 
@@ -44,7 +47,11 @@ target_link_libraries(nearest_neighbor_node ${catkin_LIBRARIES} ${PCL_LIBRARIES}
 add_executable(capture_pcd_node src/capture_pcd.cpp)
 target_link_libraries(capture_pcd_node ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${Boost_LIBRARIES} FLANN::FLANN ${HDF5_LIBRARIES} ${realsense2_LIBRARY} ${Boost_LIBRARIES})
 
+# Add executable for capture_pcd
+add_executable(capture_filter_node src/capture_pcd_with_filter.cpp)
+target_link_libraries(capture_filter_node ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${Boost_LIBRARIES} FLANN::FLANN ${HDF5_LIBRARIES} ${realsense2_LIBRARY} ${Boost_LIBRARIES})
+
 # Install targets
-install(TARGETS build_tree_node nearest_neighbor_node capture_pcd_node
+install(TARGETS build_tree_node nearest_neighbor_node capture_pcd_node UR5e
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

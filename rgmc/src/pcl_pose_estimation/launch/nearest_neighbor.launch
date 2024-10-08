@@ -1,9 +1,30 @@
 <launch>
-  <!-- Define the node -->
-  <node name="nearest_neighbor_node" pkg="pcl_pose_estimation" type="nearest_neighbor_node" output="screen"
-        args="--k 16 --thresh 50.0 
-              $(find pcl_pose_estimation)/test_data/data/cluster_4/point_cloud_frame_0_cluster_4_vfh.pcd
-              $(find pcl_pose_estimation)/test_data/kdtree.idx 
-              $(find pcl_pose_estimation)/test_data/training_data.h5 
-              $(find pcl_pose_estimation)/test_data/training_data.list"/>
+<!-- Define the node -->
+
+<arg name="x_ee" default="0.02235" />
+<arg name="y_ee" default="0.43267" />
+<arg name="z_ee" default="-0.11492" />
+<arg name="rx" default="1.768" />
+<arg name="ry" default="-3.1.679" />
+<arg name="rz" default="1.918" />
+
+<param name="x_ee" value="$(arg x_ee)" />
+<param name="y_ee" value="$(arg y_ee)" />
+<param name="z_ee" value="$(arg z_ee)" />
+<param name="rx" value="$(arg rx)" />
+<param name="ry" value="$(arg ry)" />
+<param name="rz" value="$(arg rz)" />
+
+<node name="nearest_neighbor_node" pkg="pcl_pose_estimation" type="nearest_neighbor_node" output="screen"
+      args="--k 16 --thresh 50.0 
+            $(find pcl_pose_estimation)/data/data_2024-10-8_16-23-57/cluster_0/point_cloud_frame_8_cluster_0_vfh.pcd
+            $(find pcl_pose_estimation)/data/kdtree.idx 
+            $(find pcl_pose_estimation)/data/training_data.h5 
+            $(find pcl_pose_estimation)/data/training_data.list"/>
+            <param name="x_ee" value="$(arg x_ee)" />
+            <param name="y_ee" value="$(arg y_ee)" />
+            <param name="z_ee" value="$(arg z_ee)" />
+            <param name="rx" value="$(arg rx)" />
+            <param name="ry" value="$(arg ry)" />
+            <param name="rz" value="$(arg rz)" />
 </launch>
