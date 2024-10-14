@@ -1,8 +1,0 @@
-prefix=/home/mechp4p/p4p/autonomous_manipulator/rgmc/src/Model_ws/devel
-
-Name: shape_spawner
-Description: Description of shape_spawner
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

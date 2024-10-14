@@ -1,9 +1,0 @@
-<launch>
-  <arg name="object" default="/home/mechp4p/Desktop/Catkin/src/robust_pose_estimation_pcl/data/chef_with_curvature.pcd"/>
-  <arg name="scene" default="/home/mechp4p/Desktop/Catkin/src/robust_pose_estimation_pcl/data/scene_with_curvature.pcd"/>
-
-  <node pkg="robust_pose_estimation_pcl" type="alignment_prerejective" name="alignment_prerejective_node" output="screen">
-    <param name="object_pcd" value="$(arg object)" />
-    <param name="scene_pcd" value="$(arg scene)" />
-  </node>
-</launch>

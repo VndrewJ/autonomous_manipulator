@@ -1,4 +1,4 @@
-# Robotic Grasping and Manipulation Competition
+# Robotic Grasping and Manipulation Competition (2020 OUTDATED)
 Robotic Grasping and Manipulation Competition repository
 
 ### Git cheatsheet:
