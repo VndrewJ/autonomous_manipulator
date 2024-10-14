@@ -218,7 +218,7 @@ This section covers how to setup and run the VFH Pose Estimation with the UR5e r
 ## Setup
 Screw the camera mount onto the UR5e robot. Ask Minas or the postgrad students for the mount or CAD file. Then screw the camera onto the mount.
 
-Next attach the gripper onto the camera mount. The CAD file for it is provided in the **guide** directory in the root of the repository.
+Next attach the gripper onto the camera mount. The CAD file for it is provided [here](https://cad.onshape.com/documents/3defb3de1aee2a346f9a286d/w/b1467f092d6dfb3d0f8d6504/e/7993513a29736463e065116d?renderMode=0&uiState=670c9a5489f32d03ac2575c2)
 
 To operate (control) the UR5e, please ask one of the postgrads to teach you.
 
